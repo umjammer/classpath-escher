@@ -45,7 +45,8 @@ public class RequestOutputStream extends FilterOutputStream {
   /**
    * The request object. This is written to the stream when flushing.
    */
-  public RequestObject request_object;
+  // TODO: Restrict visibility.
+  RequestObject request_object;
 
   /**
    * The sequence number of the current request.
@@ -360,8 +361,6 @@ public class RequestOutputStream extends FilterOutputStream {
     
     buffer [index] = (byte) (v >> 24);
     index++;
-    buffer [index] = (byte) (v >> 24);
-    index++;
     buffer [index] = (byte) (v >> 16);
     index++;
     buffer [index] = (byte) (v >> 8);
@@ -382,8 +381,6 @@ public class RequestOutputStream extends FilterOutputStream {
     buffer [index] = (byte) (v >> 40);
     index++;
     buffer [index] = (byte) (v >> 32);
-    index++;
-    buffer [index] = (byte) (v >> 24);
     index++;
     buffer [index] = (byte) (v >> 24);
     index++;
@@ -508,5 +505,21 @@ public class RequestOutputStream extends FilterOutputStream {
 
   public int getSequenceNumber () {
     return this.seq_number;
+  }
+
+  /**
+   * Returns the current request object, if there is any, otherwise
+   * <code>null</code>. Note that most requests are not implemented using
+   * request objects.
+   *
+   * @return the current request object, if there is any, otherwise
+   *         <code>null</code>
+   */
+  public RequestObject getRequestObject() {
+    return request_object;
+  }
+
+  public void setRequestObject(RequestObject ro) {
+    request_object = ro;
   }
 }
