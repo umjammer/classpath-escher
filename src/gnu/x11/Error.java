@@ -1,10 +1,7 @@
 package gnu.x11;
 
-import static gnu.x11.Error.ErrorCode.BAD_COLORMAP;
-
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * X server core error.
@@ -20,7 +17,7 @@ import java.util.Map;
 public class Error extends java.lang.Error {
 
   public ErrorCode code;
-  public int seq_no, bad, minor_opcode, major_opcode;
+  public int seqNumber, bad, minorOpcode, majorOpcode;
   
   /**
    * This enum represents an Error Code from a request with X server.
@@ -193,7 +190,7 @@ public class Error extends java.lang.Error {
     
   }
 
-  public static final String [] OPCODE_STRINGS = {
+  public static final String[] OPCODE_STRINGS = {
     null,                       // 0
     "CreateWindow",             // 1
     "ChangeWindowAttributes",   // 2
@@ -328,34 +325,44 @@ public class Error extends java.lang.Error {
   
   public Error (String s) { super (s); }
 
-  public Error (Display display, String error_string, ErrorCode code, int seq_no, 
-    int bad, int minor_opcode, int major_opcode) {
+  public Error (Display display, String errorString, ErrorCode code, int seqNumber, 
+    int bad, int minorOpcode, int majorOpcode) {
 
-    super (init (display, error_string, code, seq_no, bad, 
-      minor_opcode, major_opcode));
+    super (init (display, errorString, code, seqNumber, bad, 
+      minorOpcode, majorOpcode));
     this.code = code;
-    this.seq_no = seq_no;
+    this.seqNumber = seqNumber;
     this.bad = bad;
-    this.minor_opcode = minor_opcode;
-    this.major_opcode = major_opcode;
+    this.minorOpcode = minorOpcode;
+    this.majorOpcode = majorOpcode;
   }  
   
+  
+  public Error (Display display, String errorString, int errorCode, int seqNumber, 
+                int bad, String badString, int minorOpcode, int majorOpcode) {
+    super (errorMsg(display, minorOpcode, majorOpcode, errorString, seqNumber + "", badString));
+    this.seqNumber = seqNumber;
+    this.bad = bad;
+    this.minorOpcode = minorOpcode;
+    this.majorOpcode = majorOpcode;
+  }  
+              
+
+  
   // <---- Methods ---> //
-  public static String init (Display display, String error_string, ErrorCode code,
-    int seq_no, int bad, int minor_opcode, int major_opcode) {
+  public static String init (Display display, String errorString, ErrorCode code,
+    int seqNumber, int bad, int minorOpcode, int majorOpcode) {
 
     //-- code
-    String code_string = "\n  code: " + code.getErrorId() + " " + error_string;
-
+    String codeString = "\n  code: " + code.getErrorId() + " " + errorString;
 
     //-- sequence number
-    String seq_no_string = "\n  sequence-number: " + seq_no;
-
+    String seqNumberString = "\n  sequence-number: " + seqNumber;
 
     //-- bad
 
-    String bad_string = "";
-    if (code == BAD_COLORMAP
+    String badString = "";
+    if ( code == ErrorCode.BAD_COLORMAP
       || code == ErrorCode.BAD_CURSOR
       || code == ErrorCode.BAD_DRAWABLE
       || code == ErrorCode.BAD_FONT
@@ -364,47 +371,51 @@ public class Error extends java.lang.Error {
       || code == ErrorCode.BAD_PIXMAP
       || code == ErrorCode.BAD_WINDOW) {
 
-      Object bad_object = display.getResources().get (new Integer (bad));
-      bad_string = bad_object == null ?
+      Object badObject = display.getResources().get (new Integer(bad));
+      badString = badObject == null ?
         "\n  bad-id: " + bad
-        : "\n  bad-object: " + bad_object;
+        : "\n  bad-object: " + badObject;
 
     } else if (code == ErrorCode.BAD_ATOM) {
       Object bad_atom = display.getAtom(bad);
-      bad_string = bad_atom == null ?
+      badString = bad_atom == null ?
         "\n  bad-atom-id: " + bad
         : "\n  bad-atom: " + bad_atom;
 
     } else if (code == ErrorCode.BAD_VALUE) {
-      bad_string = "\n  bad-value: " + bad;
+      badString = "\n  bad-value: " + bad;
     } else if (code == ErrorCode.UNKNOWN_ERROR) {
-      bad_string = "\n unkown-error: " + bad;
+      badString = "\n unkown-error: " + bad;
     }
 
+    return errorMsg(display, minorOpcode, majorOpcode, codeString,
+                       seqNumberString, badString);
+  }
 
+private static String errorMsg(Display display, int minorOpcode,
+                                  int majorOpcode, String codeString,
+                                  String seqNumberString, String badString) {
     //-- major opcode
-
-    String major_opcode_string = "\n  major-opcode: " + major_opcode + " "
-      + (major_opcode < 128 ?
-        OPCODE_STRINGS [major_opcode]
-        : display.extensionOpcodeStrings [major_opcode - 128]);
+    String majorOpcodeString = "\n  major-opcode: " + majorOpcode + " "
+      + (majorOpcode < 128 ?
+        OPCODE_STRINGS [majorOpcode]
+        : display.extensionOpcodeStrings [majorOpcode - 128]);
     
 
     //-- minor opcode    
     
-    String minor_opcode_string = major_opcode < 128 ? ""
-      : "\n  minor-opcode: " + minor_opcode
+    String minorOpcodeString = majorOpcode < 128 ? ""
+      : "\n  minor-opcode: " + minorOpcode
       + " " +
-      display.extensionMinorOpcodeStrings[major_opcode - 128][minor_opcode];
+      display.extensionMinorOpcodeStrings[majorOpcode - 128][minorOpcode];
 
 
     //-- output
-
     return "#Error"
-      + code_string
-      + seq_no_string
-      + bad_string
-      + major_opcode_string
-      + minor_opcode_string;
-  }
+      + codeString
+      + seqNumberString
+      + badString
+      + majorOpcodeString
+      + minorOpcodeString;
+}
 }

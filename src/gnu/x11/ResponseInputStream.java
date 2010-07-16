@@ -482,7 +482,7 @@ public class ResponseInputStream extends FilterInputStream {
      * Flushes the currently pending request and starts reading the reply. The
      * specified sequence number is used to check the reply sequence number.
      * 
-     * @param seq_no
+     * @param seqNumber
      *                the sequence number of the request
      * 
      * @return the input stream for reading the reply
