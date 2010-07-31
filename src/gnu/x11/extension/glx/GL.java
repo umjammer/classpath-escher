@@ -712,7 +712,7 @@ public class GL extends gnu.x11.Resource {
      */
     public void feedbackBuffer(int size, int type) {
 
-        renderMode = FEEDBACK;
+        renderMode = GLConstant.FEEDBACK;
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
@@ -730,7 +730,7 @@ public class GL extends gnu.x11.Resource {
      */
     public void selectionBuffer(int size) {
 
-        renderMode = SELECT;
+        renderMode = GLConstant.SELECT;
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
@@ -752,16 +752,15 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glRenderMode.html">glRenderMode</a>
      */
-    public RenderModeData renderMode(int mode) {
+    public RenderModeData renderMode(GLConstant mode) {
 
         RenderModeData d = new RenderModeData();
-        int new_mode = renderMode;
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             o.beginRequest(glx.getMajorOpcode(), 107, 3);
             o.writeInt32(tag);
-            o.writeInt32(mode);
-            if (renderMode == RENDER)
+            o.writeInt32(mode.getValue());
+            if (renderMode == GLConstant.RENDER)
                 o.send();
             else {
                 ResponseInputStream i = display.getResponseInputStream();
@@ -770,13 +769,13 @@ public class GL extends gnu.x11.Resource {
                     i.skip(8);
                     d.ret_val = i.readInt32();
                     int num_data = i.readInt32();
-                    new_mode = i.readInt32();
+                    i.readInt32();
                     i.skip(12);
-                    if (renderMode == FEEDBACK) {
+                    if (renderMode == GLConstant.FEEDBACK) {
                         d.feedback_data = new float[num_data];
                         for (int j = 0; j < num_data; j++)
                             d.feedback_data[j] = i.readFloat32();
-                    } else if (renderMode == SELECT) {
+                    } else if (renderMode == GLConstant.SELECT) {
                         d.selection_data = new int[num_data];
                         for (int j = 0; j < num_data; j++)
                             d.selection_data[j] = i.readInt32();
@@ -928,7 +927,7 @@ public class GL extends gnu.x11.Resource {
      * @see #errorString()
      * @see <a href="glGetError.html">glGetError</a>
      */
-    public int error() {
+    public GLConstant error() {
 
         int err;
         RequestOutputStream o = display.getResponseOutputStream();
@@ -943,7 +942,25 @@ public class GL extends gnu.x11.Resource {
                 i.skip(20);
             }
         }
-        return err;
+        
+        switch(err) {
+            case 0:
+                return GLConstant.NO_ERROR;
+            case 0x0500:
+                return GLConstant.INVALID_ENUM;
+            case 0x0501:
+                return GLConstant.INVALID_OPERATION;
+            case 0x0502:
+                return GLConstant.INVALID_VALUE;
+            case 0x0503:
+                return GLConstant.STACK_OVERFLOW;
+            case 0x0504:
+                return GLConstant.STACK_UNDERFLOW;
+            case 0x0505:
+                return GLConstant.OUT_OF_MEMORY;
+            default:
+                return GLConstant.NO_ERROR;
+        }
     }
 
     // glx opcode 116 - get floatv
@@ -1211,9 +1228,9 @@ public class GL extends gnu.x11.Resource {
      * @see <a
      *      href="http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/getstring.html">glGetString</a>
      */
-    public String string(int name) {
+    public String string(GLConstant name) {
 
-        if (name == VERSION && versionStringCache != null)
+        if (name == GLConstant.VERSION && versionStringCache != null)
             return versionStringCache;
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -1222,7 +1239,7 @@ public class GL extends gnu.x11.Resource {
         synchronized (o) {
             o.beginGLXRequest(GLXCommand.GetString);
             o.writeInt32(tag);
-            o.writeInt32(name);
+            o.writeInt32(name.getValue());
 
             ResponseInputStream in = display.getResponseInputStream();
             synchronized (in) {
@@ -1235,7 +1252,7 @@ public class GL extends gnu.x11.Resource {
             }
         }
 
-        if (name == VERSION)
+        if (name == GLConstant.VERSION)
             versionStringCache = str;
 
         return str;
@@ -1627,7 +1644,7 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glCallLists.html">glCallLists</a>
      */
-    public void callLists(int type, Object lists) {
+    public void callLists(GLConstant type, Object lists) {
 
         int length;
         switch (type) {
@@ -1665,46 +1682,46 @@ public class GL extends gnu.x11.Resource {
             largeRenderRequest.begin(o, 2, 12, length + p);
 
             largeRenderRequest.writeInt32(length);
-            largeRenderRequest.writeInt32(type);
+            largeRenderRequest.writeInt32(type.getValue());
 
             largeRenderRequest.beginLargeParameter();
 
             switch (type) {
-            case BYTE: // fall through
-            case UNSIGNED_BYTE:
-                byte[] array1 = (byte[]) lists;
-                for (int i = 0; i < array1.length; i++)
-                    largeRenderRequest.writeInt8(array1[i]);
-                break;
-
-            case SHORT: // fall through
-            case UNSIGNED_SHORT: // fall through
-            case X2_BYTES:
-                int[] array2 = (int[]) lists;
-                for (int i = 0; i < array2.length; i++)
-                    largeRenderRequest.writeInt16(array2[i]);
-                break;
-
-            case INT: // fall through
-            case UNSIGNED_INT: // fall through
-            case X4_BYTES:
-                int[] array3 = (int[]) lists;
-                for (int i = 0; i < array3.length; i++)
-                    largeRenderRequest.writeInt32(array3[i]);
-                break;
-
-            case FLOAT:
-                float[] array4 = (float[]) lists;
-                for (int i = 0; i < array4.length; i++)
-                    largeRenderRequest.writeFloat32(array4[i]);
-                break;
-            case X3_BYTES:
-                byte[] array5 = (byte[]) lists;
-                for (int i = 0; i < array5.length; i++)
-                    largeRenderRequest.writeInt8(array5[i]);
-                break;
-            default:
-                return;
+                case BYTE: // fall through
+                case UNSIGNED_BYTE:
+                    byte[] array1 = (byte[]) lists;
+                    for (int i = 0; i < array1.length; i++)
+                        largeRenderRequest.writeInt8(array1[i]);
+                    break;
+    
+                case SHORT: // fall through
+                case UNSIGNED_SHORT: // fall through
+                case X2_BYTES:
+                    int[] array2 = (int[]) lists;
+                    for (int i = 0; i < array2.length; i++)
+                        largeRenderRequest.writeInt16(array2[i]);
+                    break;
+    
+                case INT: // fall through
+                case UNSIGNED_INT: // fall through
+                case X4_BYTES:
+                    int[] array3 = (int[]) lists;
+                    for (int i = 0; i < array3.length; i++)
+                        largeRenderRequest.writeInt32(array3[i]);
+                    break;
+    
+                case FLOAT:
+                    float[] array4 = (float[]) lists;
+                    for (int i = 0; i < array4.length; i++)
+                        largeRenderRequest.writeFloat32(array4[i]);
+                    break;
+                case X3_BYTES:
+                    byte[] array5 = (byte[]) lists;
+                    for (int i = 0; i < array5.length; i++)
+                        largeRenderRequest.writeInt8(array5[i]);
+                    break;
+                default:
+                    return;
             }
             largeRenderRequest.skip(p);
             largeRenderRequest.send();
@@ -2748,27 +2765,27 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glFogfv.html">glFogfv</a>
      */
-    public void fogfv(int pname, float[] params) {
+    public void fogfv(GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case FOG_MODE: // fall through
-        case FOG_DENSITY: // fall through
-        case FOG_START: // fall through
-        case FOG_END: // fall through
-        case FOG_INDEX:
-            n = 1;
-            break;
-        case FOG_COLOR:
-            n = 4;
-            break;
+            case FOG_MODE: // fall through
+            case FOG_DENSITY: // fall through
+            case FOG_START: // fall through
+            case FOG_END: // fall through
+            case FOG_INDEX:
+                n = 1;
+                break;
+            case FOG_COLOR:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 81, 8 + 4 * n);
-            rr.writeInt32(pname);
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeFloat(params[i]);
         }
@@ -2792,27 +2809,27 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glFogiv.html">glFogiv</a>
      */
-    public void fogiv(int pname, int[] params) {
+    public void fogiv(GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case FOG_MODE: // fall through
-        case FOG_DENSITY: // fall through
-        case FOG_START: // fall through
-        case FOG_END: // fall through
-        case FOG_INDEX:
-            n = 1;
-            break;
-        case FOG_COLOR:
-            n = 4;
-            break;
+            case FOG_MODE: // fall through
+            case FOG_DENSITY: // fall through
+            case FOG_START: // fall through
+            case FOG_END: // fall through
+            case FOG_INDEX:
+                n = 1;
+                break;
+            case FOG_COLOR:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 83, 8 + 4 * n);
-            rr.writeInt32(pname);
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeInt32(params[i]);
         }
@@ -2917,34 +2934,34 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glLightiv.html">glLightiv</a>
      */
-    public void lightiv(int light, int pname, int[] params) {
+    public void lightiv(GLConstant light, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case SPOT_EXPONENT: // fall through
-        case SPOT_CUTOFF: // fall through
-        case CONSTANT_ATTENUATION: // fall through
-        case LINEAR_ATTENUATION: // fall through
-        case QUADRATIC_ATTENUATION:
-            n = 1;
-            break;
-        case SPOT_DIRECTION:
-            n = 3;
-            break;
-        case AMBIENT: // fall through
-        case DIFFUSE: // fall through
-        case SPECULAR: // fall through
-        case POSITION:
-            n = 4;
-            break;
+            case SPOT_EXPONENT: // fall through
+            case SPOT_CUTOFF: // fall through
+            case CONSTANT_ATTENUATION: // fall through
+            case LINEAR_ATTENUATION: // fall through
+            case QUADRATIC_ATTENUATION:
+                n = 1;
+                break;
+            case SPOT_DIRECTION:
+                n = 3;
+                break;
+            case AMBIENT: // fall through
+            case DIFFUSE: // fall through
+            case SPECULAR: // fall through
+            case POSITION:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 89, 12 + 4 * n);
-            rr.writeInt32(light);
-            rr.writeInt32(pname);
+            rr.writeInt32(light.getValue());
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeInt32(params[i]);
         }
@@ -2968,25 +2985,25 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glLightModelfv.html">glLightModelfv</a>
      */
-    public void lightModelfv(int pname, float[] params) {
+    public void lightModelfv(GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case LIGHT_MODEL_COLOR_CONTROL: // fall through
-        case LIGHT_MODEL_LOCAL_VIEWER: // fall through
-        case LIGHT_MODEL_TWO_SIDE:
-            n = 1;
-            break;
-        case LIGHT_MODEL_AMBIENT:
-            n = 4;
-            break;
+            case LIGHT_MODEL_COLOR_CONTROL: // fall through
+            case LIGHT_MODEL_LOCAL_VIEWER: // fall through
+            case LIGHT_MODEL_TWO_SIDE:
+                n = 1;
+                break;
+            case LIGHT_MODEL_AMBIENT:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 91, 8 + 4 * n);
-            rr.writeInt32(pname);
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeFloat(params[i]);
         }
@@ -3010,27 +3027,27 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glLightModeliv.html">glLightModeliv</a>
      */
-    public void lightModeliv(int pname, int[] params) {
+    public void lightModeliv(GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case LIGHT_MODEL_COLOR_CONTROL: // fall through
-        case LIGHT_MODEL_LOCAL_VIEWER: // fall through
-        case LIGHT_MODEL_TWO_SIDE:
-            n = 1;
-            break;
-        case LIGHT_MODEL_AMBIENT:
-            n = 4;
-            break;
+            case LIGHT_MODEL_COLOR_CONTROL: // fall through
+            case LIGHT_MODEL_LOCAL_VIEWER: // fall through
+            case LIGHT_MODEL_TWO_SIDE:
+                n = 1;
+                break;
+            case LIGHT_MODEL_AMBIENT:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 93, 8 + 4 * n);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeInt32(params[i]);
+            rr.writeInt32(pname.getValue());
+            for (int p : params)
+                rr.writeInt32(p);
         }
     }
 
@@ -3083,7 +3100,7 @@ public class GL extends gnu.x11.Resource {
      * @see <a href="http://www.opengl.org/sdk/docs/man/xhtml/glMaterial.xml">
      *      glMaterialfv</a>
      */
-    public void materialfv(int face, int pname, float[] params) {
+    public void materialfv(GLConstant face, GLConstant pname, float[] params) {
 
         this.materialfv(face, pname, params, 0);
     }
@@ -3101,34 +3118,34 @@ public class GL extends gnu.x11.Resource {
      * @param params
      * @param offset
      */
-    public void materialfv(int face, int pname, float[] params, int offset) {
+    public void materialfv(GLConstant face, GLConstant pname, float[] params, int offset) {
 
         int n = 0;
 
         switch (pname) {
-        case SHININESS:
-            n = 1;
-            break;
-        case COLOR_INDEXES:
-            n = 3;
-            break;
-        case AMBIENT: // fall through
-        case DIFFUSE: // fall through
-        case SPECULAR: // fall through
-        case EMISSION: // fall through
-        case AMBIENT_AND_DIFFUSE:
-            n = 4;
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid pname");
+            case SHININESS:
+                n = 1;
+                break;
+            case COLOR_INDEXES:
+                n = 3;
+                break;
+            case AMBIENT: // fall through
+            case DIFFUSE: // fall through
+            case SPECULAR: // fall through
+            case EMISSION: // fall through
+            case AMBIENT_AND_DIFFUSE:
+                n = 4;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid pname");
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRenderRequest(o,
                     GLXRenderingCommand.Materialfv, 4 * n);
-            rr.writeInt32(face);
-            rr.writeInt32(pname);
+            rr.writeInt32(face.getValue());
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeFloat(params[i + offset]);
         }
@@ -3153,31 +3170,31 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMaterialiv.html">glMaterialiv</a>
      */
-    public void materialiv(int face, int pname, int[] params) {
+    public void materialiv(GLConstant face, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case SHININESS:
-            n = 1;
-            break;
-        case COLOR_INDEXES:
-            n = 3;
-            break;
-        case AMBIENT: // fall through
-        case DIFFUSE: // fall through
-        case SPECULAR: // fall through
-        case EMISSION: // fall through
-        case AMBIENT_AND_DIFFUSE:
-            n = 4;
-            break;
+            case SHININESS:
+                n = 1;
+                break;
+            case COLOR_INDEXES:
+                n = 3;
+                break;
+            case AMBIENT: // fall through
+            case DIFFUSE: // fall through
+            case SPECULAR: // fall through
+            case EMISSION: // fall through
+            case AMBIENT_AND_DIFFUSE:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 96, 12 + 4 * n);
-            rr.writeInt32(face);
-            rr.writeInt32(pname);
+            rr.writeInt32(face.getValue());
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeInt32(params[i]);
         }
@@ -3200,9 +3217,9 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glPolygonMode.html">glPolygonMode</a>
      */
-    public void polygonMode(int face, int mode) {
+    public void polygonMode(GLConstant face, GLConstant mode) {
 
-        render2i(101, face, mode);
+        render2i(101, face.getValue(), mode.getValue());
     }
 
     // glx render opcode 102 - polygon stipple
@@ -3284,9 +3301,9 @@ public class GL extends gnu.x11.Resource {
      * @see <a
      *      href="http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/shademodel.html">glShadeModel</a>
      */
-    public void shadeModel(int mode) {
+    public void shadeModel(GLConstant mode) {
 
-        shade_model(mode);
+        shade_model(mode.getValue());
     }
 
     // glx render opcode 105 - texture parameterf
@@ -3308,7 +3325,7 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexParameterfv.html">glTexParameterfv</a>
      */
-    public void texParameterfv(int target, int pname, float[] params) {
+    public void texParameterfv(int target, GLConstant pname, float[] params) {
 
         int n = 0;
 
@@ -3329,7 +3346,7 @@ public class GL extends gnu.x11.Resource {
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 106, 12 + 4 * n);
             rr.writeInt32(target);
-            rr.writeInt32(pname);
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeFloat(params[i]);
         }
@@ -3348,30 +3365,30 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexParameteriv.html">glTexParameteriv</a>
      */
-    public void texParameteriv(int target, int pname, int[] params) {
+    public void texParameteriv(GLConstant target, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_MIN_FILTER: // fall through
-        case TEXTURE_MAG_FILTER: // fall through
-        case TEXTURE_WRAP_S: // fall through
-        case TEXTURE_WRAP_T: // fall through
-        case TEXTURE_PRIORITY:
-            n = 1;
-            break;
-        case TEXTURE_BORDER_COLOR:
-            n = 4;
-            break;
+            case TEXTURE_MIN_FILTER: // fall through
+            case TEXTURE_MAG_FILTER: // fall through
+            case TEXTURE_WRAP_S: // fall through
+            case TEXTURE_WRAP_T: // fall through
+            case TEXTURE_PRIORITY:
+                n = 1;
+                break;
+            case TEXTURE_BORDER_COLOR:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 108, 12 + 4 * n);
-            rr.writeInt32(target);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeInt32(params[i]);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(pname.getValue());
+            for (int p : params)
+                rr.writeInt32(p);
         }
     }
 
@@ -3475,26 +3492,26 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexEnvfv.html">glTexEnvfv</a>
      */
-    public void texEnvfv(int target, int pname, float[] params) {
+    public void texEnvfv(GLConstant target, GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_ENV_MODE:
-            n = 1;
-            break;
-        case TEXTURE_ENV_COLOR:
-            n = 4;
-            break;
+            case TEXTURE_ENV_MODE:
+                n = 1;
+                break;
+            case TEXTURE_ENV_COLOR:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 112, 12 + 4 * n);
-            rr.writeInt32(target);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeFloat(params[i]);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(pname.getValue());
+            for (float p : params)
+                rr.writeFloat(p);
         }
     }
 
@@ -3511,24 +3528,24 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexEnviv.html">glTexEnviv</a>
      */
-    public void texEnviv(int target, int pname, int[] params) {
+    public void texEnviv(GLConstant target, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_ENV_MODE:
-            n = 1;
-            break;
-        case TEXTURE_ENV_COLOR:
-            n = 4;
-            break;
+            case TEXTURE_ENV_MODE:
+                n = 1;
+                break;
+            case TEXTURE_ENV_COLOR:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 114, 12 + 4 * n);
-            rr.writeInt32(target);
-            rr.writeInt32(pname);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeInt32(params[i]);
         }
@@ -3553,25 +3570,25 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexGendv.html">glTexGendv</a>
      */
-    public void texGendv(int coord, int pname, double[] params) {
+    public void texGendv(GLConstant coord, GLConstant pname, double[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_GEN_MODE:
-            n = 1;
-            break;
-        case OBJECT_PLANE: // fall through
-        case EYE_PLANE:
-            n = 4;
-            break;
+            case TEXTURE_GEN_MODE:
+                n = 1;
+                break;
+            case OBJECT_PLANE: // fall through
+            case EYE_PLANE:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 116, 12 + 8 * n);
-            rr.writeInt32(coord);
-            rr.writeInt32(pname);
+            rr.writeInt32(coord.getValue());
+            rr.writeInt32(pname.getValue());
             for (int i = 0; i < n; i++)
                 rr.writeDouble(params[i]);
         }
@@ -3596,27 +3613,27 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexGenfv.html">glTexGenfv</a>
      */
-    public void texGenfv(int coord, int pname, float[] params) {
+    public void texGenfv(GLConstant coord, GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_GEN_MODE:
-            n = 1;
-            break;
-        case OBJECT_PLANE: // fall through
-        case EYE_PLANE:
-            n = 4;
-            break;
+            case TEXTURE_GEN_MODE:
+                n = 1;
+                break;
+            case OBJECT_PLANE: // fall through
+            case EYE_PLANE:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 118, 12 + 4 * n);
-            rr.writeInt32(coord);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeFloat(params[i]);
+            rr.writeInt32(coord.getValue());
+            rr.writeInt32(pname.getValue());
+            for (float p : params)
+                rr.writeFloat(p);
         }
     }
 
@@ -3624,36 +3641,36 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glTexGeni.html">glTexGeni</a>
      */
-    public void texGeni(int coord, int pname, int param) {
+    public void texGeni(GLConstant coord, GLConstant pname, int param) {
 
-        render3i(119, coord, pname, param);
+        render3i(119, coord.getValue(), pname.getValue(), param);
     }
 
     // glx render opcode 120 - texture geniv
     /**
      * @see <a href="glTexGeniv.html">glTexGeniv</a>
      */
-    public void texGeniv(int coord, int pname, int[] params) {
+    public void texGeniv(GLConstant coord, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case TEXTURE_GEN_MODE:
-            n = 1;
-            break;
-        case OBJECT_PLANE: // fall through
-        case EYE_PLANE:
-            n = 4;
-            break;
+            case TEXTURE_GEN_MODE:
+                n = 1;
+                break;
+            case OBJECT_PLANE: // fall through
+            case EYE_PLANE:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 120, 12 + 4 * n);
-            rr.writeInt32(coord);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeInt32(params[i]);
+            rr.writeInt32(coord.getValue());
+            rr.writeInt32(pname.getValue());
+            for (int p : params)
+                rr.writeInt32(p);
         }
     }
 
@@ -3744,13 +3761,13 @@ public class GL extends gnu.x11.Resource {
      *      href="http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/clear.html">
      *      glClear </a>
      */
-    public void clear(int mask) {
+    public void clear(GLConstant mask) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRenderRequest(o,
                     GLXRenderingCommand.Clear);
-            rr.writeInt32(mask);
+            rr.writeInt32(mask.getValue());
         }
     }
 
@@ -3946,12 +3963,12 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glDisable.html">glDisable</a>
      */
-    public void disable(int capability) {
+    public void disable(GLConstant capability) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 138, 8);
-            rr.writeInt32(capability);
+            rr.writeInt32(capability.getValue());
         }
     }
 
@@ -3963,13 +3980,13 @@ public class GL extends gnu.x11.Resource {
      * @see <a
      *      href="http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/enable.html">glEnable</a>
      */
-    public void enable(int capability) {
+    public void enable(GLConstant capability) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRenderRequest(o,
                     GLXRenderingCommand.Enable);
-            rr.writeInt32(capability);
+            rr.writeInt32(capability.getValue());
         }
     }
 
@@ -4002,29 +4019,29 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMap1d.html">glMap1d</a>
      */
-    public void map1d(int target, double u1, double u2, int stride, int order,
+    public void map1d(GLConstant target, double u1, double u2, int stride, int order,
                       double[] points) {
 
         int k = 0;
 
         switch (target) {
-        case MAP1_INDEX: // fall through
-        case MAP1_TEXTURE_COORD_1:
-            k = 1;
-            break;
-        case MAP1_TEXTURE_COORD_2:
-            k = 2;
-            break;
-        case MAP1_NORMAL: // fall through
-        case MAP1_TEXTURE_COORD_3: // fall through
-        case MAP1_VERTEX_3:
-            k = 3;
-            break;
-        case MAP1_COLOR_4: // fall through
-        case MAP1_TEXTURE_COORD_4: // fall through
-        case MAP1_VERTEX_4:
-            k = 4;
-            break;
+            case MAP1_INDEX: // fall through
+            case MAP1_TEXTURE_COORD_1:
+                k = 1;
+                break;
+            case MAP1_TEXTURE_COORD_2:
+                k = 2;
+                break;
+            case MAP1_NORMAL: // fall through
+            case MAP1_TEXTURE_COORD_3: // fall through
+            case MAP1_VERTEX_3:
+                k = 3;
+                break;
+            case MAP1_COLOR_4: // fall through
+            case MAP1_TEXTURE_COORD_4: // fall through
+            case MAP1_VERTEX_4:
+                k = 4;
+                break;
         }
 
         int n = order * k * 8;
@@ -4034,7 +4051,7 @@ public class GL extends gnu.x11.Resource {
             largeRenderRequest.begin(o, 143, 28, n);
             largeRenderRequest.writeFloat64(u1);
             largeRenderRequest.writeFloat64(u2);
-            largeRenderRequest.writeInt32(target);
+            largeRenderRequest.writeInt32(target.getValue());
             largeRenderRequest.writeInt32(order);
             largeRenderRequest.beginLargeParameter();
             for (int i = 0; i < points.length; i++)
@@ -4047,29 +4064,29 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMap1f.html">glMap1f</a>
      */
-    public void map1f(int target, float u1, float u2, int stride, int order,
+    public void map1f(GLConstant target, float u1, float u2, int stride, int order,
                       float[] points) {
 
         int k = 0;
 
         switch (target) {
-        case MAP1_INDEX: // fall through
-        case MAP1_TEXTURE_COORD_1:
-            k = 1;
-            break;
-        case MAP1_TEXTURE_COORD_2:
-            k = 2;
-            break;
-        case MAP1_NORMAL: // fall through
-        case MAP1_TEXTURE_COORD_3: // fall through
-        case MAP1_VERTEX_3:
-            k = 3;
-            break;
-        case MAP1_COLOR_4: // fall through
-        case MAP1_TEXTURE_COORD_4: // fall through
-        case MAP1_VERTEX_4:
-            k = 4;
-            break;
+            case MAP1_INDEX: // fall through
+            case MAP1_TEXTURE_COORD_1:
+                k = 1;
+                break;
+            case MAP1_TEXTURE_COORD_2:
+                k = 2;
+                break;
+            case MAP1_NORMAL: // fall through
+            case MAP1_TEXTURE_COORD_3: // fall through
+            case MAP1_VERTEX_3:
+                k = 3;
+                break;
+            case MAP1_COLOR_4: // fall through
+            case MAP1_TEXTURE_COORD_4: // fall through
+            case MAP1_VERTEX_4:
+                k = 4;
+                break;
         }
 
         int n = order * k * 4;
@@ -4077,7 +4094,7 @@ public class GL extends gnu.x11.Resource {
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             largeRenderRequest.begin(o, 144, 20, n);
-            largeRenderRequest.writeInt32(target);
+            largeRenderRequest.writeInt32(target.getValue());
             largeRenderRequest.writeFloat32(u1);
             largeRenderRequest.writeFloat32(u2);
             largeRenderRequest.writeInt32(order);
@@ -4092,30 +4109,30 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMap2d.html">glMap2d</a>
      */
-    public void map2d(int target, double u1, double u2, int ustride,
+    public void map2d(GLConstant target, double u1, double u2, int ustride,
                       int uorder, double v1, double v2, int vstride,
                       int vorder, double[] points) {
 
         int k = 0;
 
         switch (target) {
-        case MAP2_INDEX: // fall through
-        case MAP2_TEXTURE_COORD_1:
-            k = 1;
-            break;
-        case MAP2_TEXTURE_COORD_2:
-            k = 2;
-            break;
-        case MAP2_NORMAL: // fall through
-        case MAP2_TEXTURE_COORD_3: // fall through
-        case MAP2_VERTEX_3:
-            k = 3;
-            break;
-        case MAP2_COLOR_4: // fall through
-        case MAP2_TEXTURE_COORD_4: // fall through
-        case MAP2_VERTEX_4:
-            k = 4;
-            break;
+            case MAP2_INDEX: // fall through
+            case MAP2_TEXTURE_COORD_1:
+                k = 1;
+                break;
+            case MAP2_TEXTURE_COORD_2:
+                k = 2;
+                break;
+            case MAP2_NORMAL: // fall through
+            case MAP2_TEXTURE_COORD_3: // fall through
+            case MAP2_VERTEX_3:
+                k = 3;
+                break;
+            case MAP2_COLOR_4: // fall through
+            case MAP2_TEXTURE_COORD_4: // fall through
+            case MAP2_VERTEX_4:
+                k = 4;
+                break;
         }
 
         int n = vorder * uorder * k * 8;
@@ -4127,7 +4144,7 @@ public class GL extends gnu.x11.Resource {
             largeRenderRequest.writeFloat64(u2);
             largeRenderRequest.writeFloat64(v1);
             largeRenderRequest.writeFloat64(v2);
-            largeRenderRequest.writeInt32(target);
+            largeRenderRequest.writeInt32(target.getValue());
             largeRenderRequest.writeInt32(uorder);
             largeRenderRequest.writeInt32(vorder);
             largeRenderRequest.beginLargeParameter();
@@ -4142,30 +4159,30 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMap2f.html">glMap2f</a>
      */
-    public void map2f(int target, float u1, float u2, int ustride, int uorder,
+    public void map2f(GLConstant target, float u1, float u2, int ustride, int uorder,
                       float v1, float v2, int vstride, int vorder,
                       float[] points) {
 
         int k = 0;
 
         switch (target) {
-        case MAP2_INDEX: // fall through
-        case MAP2_TEXTURE_COORD_1:
-            k = 1;
-            break;
-        case MAP2_TEXTURE_COORD_2:
-            k = 2;
-            break;
-        case MAP2_NORMAL: // fall through
-        case MAP2_TEXTURE_COORD_3: // fall through
-        case MAP2_VERTEX_3:
-            k = 3;
-            break;
-        case MAP2_COLOR_4: // fall through
-        case MAP2_TEXTURE_COORD_4: // fall through
-        case MAP2_VERTEX_4:
-            k = 4;
-            break;
+            case MAP2_INDEX: // fall through
+            case MAP2_TEXTURE_COORD_1:
+                k = 1;
+                break;
+            case MAP2_TEXTURE_COORD_2:
+                k = 2;
+                break;
+            case MAP2_NORMAL: // fall through
+            case MAP2_TEXTURE_COORD_3: // fall through
+            case MAP2_VERTEX_3:
+                k = 3;
+                break;
+            case MAP2_COLOR_4: // fall through
+            case MAP2_TEXTURE_COORD_4: // fall through
+            case MAP2_VERTEX_4:
+                k = 4;
+                break;
         }
 
         int n = vorder * uorder * k * 4;
@@ -4173,7 +4190,7 @@ public class GL extends gnu.x11.Resource {
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             largeRenderRequest.begin(o, 146, 32, n);
-            largeRenderRequest.writeInt32(target);
+            largeRenderRequest.writeInt32(target.getValue());
             largeRenderRequest.writeFloat32(u1);
             largeRenderRequest.writeFloat32(u2);
             largeRenderRequest.writeInt32(uorder);
@@ -4335,12 +4352,12 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glEvalMesh2.html">glEvalMesh2</a>
      */
-    public void evalMesh2(int mode, int i1, int i2, int j1, int j2) {
+    public void evalMesh2(GLConstant mode, int i1, int i2, int j1, int j2) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 157, 24);
-            rr.writeInt32(mode);
+            rr.writeInt32(mode.getValue());
             rr.writeInt32(i1);
             rr.writeInt32(i2);
             rr.writeInt32(j1);
@@ -5215,24 +5232,23 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glColorTableParameterf.html"> glColorTableParameterf</a>
      */
-    public void colorTableParameterfv(int target, int pname, float[] params) {
+    public void colorTableParameterfv(GLConstant target, GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case COLOR_TABLE_SCALE: // fall through
-        case COLOR_TABLE_BIAS:
-            n = 4;
-            break;
+            case COLOR_TABLE_SCALE: // fall through
+            case COLOR_TABLE_BIAS:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 2054, 12 + 4 * n);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++) {
-                rr.writeFloat(params[i]);
-            }
+            rr.writeInt32(pname.getValue());
+            for (float p : params)
+                rr.writeFloat(p);
         }
     }
 
@@ -5240,24 +5256,23 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glColorTableParameteri.html"> glColorTableParameterf</a>
      */
-    public void colorTableParameteriv(int target, int pname, int[] params) {
+    public void colorTableParameteriv(GLConstant target, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case COLOR_TABLE_SCALE: // fall through
-        case COLOR_TABLE_BIAS:
-            n = 4;
-            break;
+            case COLOR_TABLE_SCALE: // fall through
+            case COLOR_TABLE_BIAS:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 2055, 12 + 4 * n);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++) {
-                rr.writeInt32(params[i]);
-            }
+            rr.writeInt32(pname.getValue());
+            for (int p : params)
+                rr.writeInt32(p);
         }
     }
 
@@ -5265,13 +5280,13 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glCopyColorTable.html">glCopyColorTable</a>
      */
-    public void copyColorTable(int target, int internalFormat, int x, int y,
+    public void copyColorTable(GLConstant target, int internalFormat, int x, int y,
                                  int width) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 2056, 24);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(internalFormat);
             rr.writeInt32(x);
             rr.writeInt32(y);
@@ -5299,12 +5314,12 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glBlendEquation.html">glBlendEquation</a>
      */
-    public void blendEquation(int mode) {
+    public void blendEquation(GLConstant mode) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4097, 8);
-            rr.writeInt32(mode);
+            rr.writeInt32(mode.getValue());
         }
     }
 
@@ -5381,32 +5396,32 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glConvolutionParameterf.html"> glConvolutionParameterf</a>
      */
-    public void convolutionParameterf(int target, int pname, float[] params) {
+    public void convolutionParameterf(GLConstant target, GLConstant pname, float[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case CONVOLUTION_BORDER_COLOR: // fall through
-        case CONVOLUTION_FORMAT: // fall through
-        case CONVOLUTION_WIDTH: // fall through
-        case CONVOLUTION_HEIGHT: // fall through
-        case MAX_CONVOLUTION_WIDTH: // fall through
-        case MAX_CONVOLUTION_HEIGHT:
-            n = 1;
-            break;
-        case CONVOLUTION_FILTER_SCALE: // fall through
-        case CONVOLUTION_FILTER_BIAS:
-            n = 4;
-            break;
+            case CONVOLUTION_BORDER_COLOR: // fall through
+            case CONVOLUTION_FORMAT: // fall through
+            case CONVOLUTION_WIDTH: // fall through
+            case CONVOLUTION_HEIGHT: // fall through
+            case MAX_CONVOLUTION_WIDTH: // fall through
+            case MAX_CONVOLUTION_HEIGHT:
+                n = 1;
+                break;
+            case CONVOLUTION_FILTER_SCALE: // fall through
+            case CONVOLUTION_FILTER_BIAS:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4104, 12 + 4 * n);
-            rr.writeInt32(target);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeFloat(params[i]);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(pname.getValue());
+            for (float p : params)
+                rr.writeFloat(p);
         }
     }
 
@@ -5429,32 +5444,32 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glConvolutionParameteri.html"> glConvolutionParameteri</a>
      */
-    public void convolutionParameteri(int target, int pname, int[] params) {
+    public void convolutionParameteri(GLConstant target, GLConstant pname, int[] params) {
 
         int n = 0;
 
         switch (pname) {
-        case CONVOLUTION_BORDER_COLOR: // fall through
-        case CONVOLUTION_FORMAT: // fall through
-        case CONVOLUTION_WIDTH: // fall through
-        case CONVOLUTION_HEIGHT: // fall through
-        case MAX_CONVOLUTION_WIDTH: // fall through
-        case MAX_CONVOLUTION_HEIGHT:
-            n = 1;
-            break;
-        case CONVOLUTION_FILTER_SCALE: // fall through
-        case CONVOLUTION_FILTER_BIAS:
-            n = 4;
-            break;
+            case CONVOLUTION_BORDER_COLOR: // fall through
+            case CONVOLUTION_FORMAT: // fall through
+            case CONVOLUTION_WIDTH: // fall through
+            case CONVOLUTION_HEIGHT: // fall through
+            case MAX_CONVOLUTION_WIDTH: // fall through
+            case MAX_CONVOLUTION_HEIGHT:
+                n = 1;
+                break;
+            case CONVOLUTION_FILTER_SCALE: // fall through
+            case CONVOLUTION_FILTER_BIAS:
+                n = 4;
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4106, 12 + 4 * n);
-            rr.writeInt32(target);
-            rr.writeInt32(pname);
-            for (int i = 0; i < n; i++)
-                rr.writeInt32(params[i]);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(pname.getValue());
+            for (int p : params)
+                rr.writeInt32(p);
         }
     }
 
@@ -5462,13 +5477,13 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glCopyConvolutionFilter1d.html"> glCopyConvolutionFilter1d</a>
      */
-    public void copyConvolutionFilter1d(int target, int internalFormat,
+    public void copyConvolutionFilter1d(GLConstant target, int internalFormat,
                                           int x, int y, int width) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4107, 24);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(internalFormat);
             rr.writeInt32(x);
             rr.writeInt32(y);
@@ -5480,14 +5495,14 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glCopyConvolutionFilter1d.html"> glCopyConvolutionFilter1d</a>
      */
-    public void copyConvolutionFilter2d(int target, int internalFormat,
+    public void copyConvolutionFilter2d(GLConstant target, int internalFormat,
                                           int x, int y, int width,
                                           int height) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4108, 28);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(internalFormat);
             rr.writeInt32(x);
             rr.writeInt32(y);
@@ -5500,13 +5515,13 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glHistogram.html"> glHistogram</a>
      */
-    public void histogram(int target, int width, int internalFormat,
+    public void histogram(GLConstant target, int width, int internalFormat,
                           boolean sink) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4110, 20);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(width);
             rr.writeInt32(internalFormat);
             rr.writeBool(sink);
@@ -5518,13 +5533,13 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glMinmax.html"> glMinmax</a>
      */
-    public void minmax(int target, int internalFormat, boolean sink) {
+    public void minmax(GLConstant target, GLConstant internalFormat, boolean sink) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4111, 16);
-            rr.writeInt32(target);
-            rr.writeInt32(internalFormat);
+            rr.writeInt32(target.getValue());
+            rr.writeInt32(internalFormat.getValue());
             rr.writeBool(sink);
             rr.writePad(3);
         }
@@ -5547,12 +5562,12 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glResetMinmax.html">glResetMinmax</a>
      */
-    public void resetMinmax(int target) {
+    public void resetMinmax(GLConstant target) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4113, 8);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
         }
     }
 
@@ -5560,12 +5575,12 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glBindTexture.html">glBindTexture</a>
      */
-    public void bindTexture(int target, int texture) {
+    public void bindTexture(GLConstant target, int texture) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4117, 12);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(texture);
         }
     }
@@ -5591,14 +5606,14 @@ public class GL extends gnu.x11.Resource {
     /**
      * @see <a href="glCopyTexImage1D.html">glCopyTexImage1D</a>
      */
-    public void copyTextureImage1d(int target, int level,
+    public void copyTextureImage1d(GLConstant target, int level,
                                       int internalFormat, int x, int y,
                                       int width, int border) {
 
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
             GLRenderRequest rr = beginRendeRequest(o, 4119, 32);
-            rr.writeInt32(target);
+            rr.writeInt32(target.getValue());
             rr.writeInt32(level);
             rr.writeInt32(internalFormat);
             rr.writeInt32(x);
@@ -5700,7 +5715,7 @@ public class GL extends gnu.x11.Resource {
      * @see #enable(int)
      * @see #disable(int)
      */
-    public void capability(int capability, boolean enable) {
+    public void capability(GLConstant capability, boolean enable) {
 
         if (enable)
             enable(capability);
@@ -5831,20 +5846,20 @@ public class GL extends gnu.x11.Resource {
     public String errorString() {
 
         switch (error()) {
-        case NO_ERROR:
-            return "no-error";
-        case INVALID_ENUM:
-            return "invalid-enum";
-        case INVALID_VALUE:
-            return "invalid-value";
-        case INVALID_OPERATION:
-            return "invalid-operation";
-        case STACK_OVERFLOW:
-            return "stack-overflow";
-        case STACK_UNDERFLOW:
-            return "stack-underflow";
-        case OUT_OF_MEMORY:
-            return "out-of-memory";
+            case NO_ERROR:
+                return "no-error";
+            case INVALID_ENUM:
+                return "invalid-enum";
+            case INVALID_VALUE:
+                return "invalid-value";
+            case INVALID_OPERATION:
+                return "invalid-operation";
+            case STACK_OVERFLOW:
+                return "stack-overflow";
+            case STACK_UNDERFLOW:
+                return "stack-underflow";
+            case OUT_OF_MEMORY:
+                return "out-of-memory";
         default:
             return null;
         }
@@ -6455,7 +6470,7 @@ public class GL extends gnu.x11.Resource {
 
     public boolean support(int major, int minor) {
 
-        String version_all = string(VERSION);
+        String version_all = string(GLConstant.VERSION);
         int to = version_all.indexOf(' ');
         if (to == -1)
             to = version_all.length();
@@ -6473,9 +6488,9 @@ public class GL extends gnu.x11.Resource {
 
     public String toString() {
 
-        return "#GL" + "\n  vendor: " + string(VENDOR) + "\n  renderer: "
-                + string(RENDERER) + "\n  version: " + string(VERSION)
-                + "\n  extensions: " + string(EXTENSIONS);
+        return "#GL" + "\n  vendor: " + string(GLConstant.VENDOR) + "\n  renderer: "
+                + string(GLConstant.RENDERER) + "\n  version: " + string(GLConstant.VERSION)
+                + "\n  extensions: " + string(GLConstant.EXTENSIONS);
     }
 
     /**

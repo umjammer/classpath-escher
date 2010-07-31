@@ -920,7 +920,7 @@ public abstract class Drawable extends Resource {
         }
     }
 
-    public void put_image(GC gc, Image image, int x, int y) {
+    public void putImage(GC gc, Image image, int x, int y) {
 
         // TODO: Make use of big requests when possible.
         int max_data_byte = display.getMaximumRequestLength() - 24;

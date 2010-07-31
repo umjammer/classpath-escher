@@ -45,7 +45,7 @@ public class GLUT {             // TODO
   };
 
 
-  private void box (float size, int type) {
+  private void box (float size, GLConstant type) {
     float [] [] v = new float [8] [3];
     v[0][0] = v[1][0] = v[2][0] = v[3][0] = -size / 2;
     v[4][0] = v[5][0] = v[6][0] = v[7][0] = size / 2;
@@ -90,7 +90,7 @@ public class GLUT {             // TODO
   };
 
 
-  private void octahedron (int type) {
+  private void octahedron (GLConstant type) {
     for (int i=7; i>=0; i--) {
       int [] face = OCTAHEDRON_FACES [i];
       float [] x0 = OCTAHEDRON_NORMALS [face [0]]; 
@@ -118,7 +118,7 @@ public class GLUT {             // TODO
    * @see <a href="glutSolidCube.html">glutSolidCube</a>
    */
   public void solid_cube (float size) {
-    box (size, GL.QUADS);
+    box (size, GLConstant.QUADS);
   }
 
 
@@ -137,7 +137,7 @@ public class GLUT {             // TODO
    * @see <a href="glutSolidOctahedron.html">glutSolidOctahedron</a>
    */
   public void solid_octahedron () {
-    octahedron (GL.TRIANGLES);
+    octahedron (GLConstant.TRIANGLES);
   }
 
 
@@ -145,7 +145,7 @@ public class GLUT {             // TODO
    * @see <a href="glutSolidTeapot.html">glutSolidTeapot</a>
    */
   public void solid_teapot (double scale) {
-    teapot (14, scale, GL.FILL);
+    teapot (14, scale, GLConstant.FILL);
   }
 
 
@@ -167,7 +167,7 @@ public class GLUT {             // TODO
       float cos_theta1 = (float) Math.cos (theta1);
       float sin_theta1 = (float) Math.sin (theta1);
 
-      gl.begin (GL.QUAD_STRIP);
+      gl.begin (GLConstant.QUAD_STRIP);
       float phi = 0.0f;
 
       for (int j=sides; j>=0; j--) {
@@ -293,14 +293,14 @@ public class GLUT {             // TODO
   };
 
 
-  private void teapot (int grid, double scale, int type) {
-    gl.push_attrib (GL.ENABLE_BIT | GL.EVAL_BIT);
+  private void teapot (int grid, double scale, GLConstant type) {
+    gl.pushAttrib (GLConstant.ENABLE_BIT.getValue() | GLConstant.EVAL_BIT.getValue());
     gl.pushMatrix ();
 
-    gl.enable (GL.AUTO_NORMAL);
-    gl.enable (GL.NORMALIZE);
-    gl.enable (GL.MAP2_VERTEX_3);
-    gl.enable (GL.MAP2_TEXTURE_COORD_2);
+    gl.enable (GLConstant.AUTO_NORMAL);
+    gl.enable (GLConstant.NORMALIZE);
+    gl.enable (GLConstant.MAP2_VERTEX_3);
+    gl.enable (GLConstant.MAP2_TEXTURE_COORD_2);
     gl.rotatef (270.0f, 1.0f, 0.0f, 0.0f);    
     float scale0 = (float) (0.5 * scale);
     gl.scalef (scale0, scale0, scale0);
@@ -308,11 +308,11 @@ public class GLUT {             // TODO
     teapot_patch (grid, type);
     
     gl.popMatrix ();
-    gl.pop_attrib ();
+    gl.popAttrib ();
   }
 
   
-  private void teapot_patch (int grid, int type) {
+  private void teapot_patch (int grid, GLConstant type) {
     float [] [] [] p = new float [4] [4] [3];
     float [] [] [] q = new float [4] [4] [3];
     float [] [] [] r = new float [4] [4] [3];
@@ -344,24 +344,24 @@ public class GLUT {             // TODO
       float [] s0 = Misc.linearize (s);
       float [] t0 = Misc.linearize (TEAPOT_TEXTURE);
 
-      gl.map2f (GL.MAP2_TEXTURE_COORD_2, 0, 1, 2, 2, 0, 1, 4, 2, t0);        
-      gl.map2f (GL.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, p0);
-      gl.map_grid2f (grid, 0.0f, 1.0f, grid, 0.0f, 1.0f);
-      gl.eval_mesh2 (type, 0, grid, 0, grid);
-      gl.map2f (GL.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, q0);
-      gl.eval_mesh2 (type, 0, grid, 0, grid);
+      gl.map2f (GLConstant.MAP2_TEXTURE_COORD_2, 0, 1, 2, 2, 0, 1, 4, 2, t0);        
+      gl.map2f (GLConstant.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, p0);
+      gl.mapGrid2f (grid, 0.0f, 1.0f, grid, 0.0f, 1.0f);
+      gl.evalMesh2 (type, 0, grid, 0, grid);
+      gl.map2f (GLConstant.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, q0);
+      gl.evalMesh2 (type, 0, grid, 0, grid);
 
       if  (i<6) {
-        gl.map2f (GL.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, r0);
-        gl.eval_mesh2 (type, 0, grid, 0, grid);
-        gl.map2f (GL.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, s0);
-        gl.eval_mesh2 (type, 0, grid, 0, grid);
+        gl.map2f (GLConstant.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, r0);
+        gl.evalMesh2 (type, 0, grid, 0, grid);
+        gl.map2f (GLConstant.MAP2_VERTEX_3, 0, 1, 3, 4, 0, 1, 12, 4, s0);
+        gl.evalMesh2 (type, 0, grid, 0, grid);
       }
     }
   }
 
 
-  private void triangle (float [] x0, float [] x1, float [] x2, int type) {
+  private void triangle (float [] x0, float [] x1, float [] x2, GLConstant type) {
     // TODO subdivide
     Vector3f A = new Vector3f (x0).normalize ();
     Vector3f B = new Vector3f (x1).normalize ();
@@ -397,7 +397,7 @@ public class GLUT {             // TODO
    * @see <a href="glutWireCube.html">glutWireCube</a>
    */
   public void wire_cube (float size) {
-    box (size, GL.LINE_LOOP);
+    box (size, GLConstant.LINE_LOOP);
   }
 
 
@@ -416,7 +416,7 @@ public class GLUT {             // TODO
    * @see <a href="glutWireOctahedron.html">glutWireOctahedron</a>
    */
   public void wire_octahedron () {
-    octahedron (GL.LINE_LOOP);
+    octahedron (GLConstant.LINE_LOOP);
   }
 
 
@@ -424,7 +424,7 @@ public class GLUT {             // TODO
    * @see <a href="glutSolidTeapot.html">glutSolidTeapot</a>
    */
   public void wire_teapot (double scale) {
-    teapot (10, scale, GL.FILL);
+    teapot (10, scale, GLConstant.FILL);
   }
 
 
@@ -434,9 +434,9 @@ public class GLUT {             // TODO
   public void wire_torus (double inner_radius, double outer_radius,
     int sides, int rings) {
 
-    gl.push_attrib (GL.POLYGON_BIT);
-    gl.polygon_mode (GL.FRONT_AND_BACK, GL.LINE);
+    gl.pushAttrib (GLConstant.POLYGON_BIT.getValue());
+    gl.polygonMode (GLConstant.FRONT_AND_BACK, GLConstant.LINE);
     solid_torus (inner_radius, outer_radius, sides, rings);
-    gl.pop_attrib ();    
+    gl.popAttrib();    
   }
 }

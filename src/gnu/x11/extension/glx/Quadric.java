@@ -89,7 +89,7 @@ public class Quadric {
 
     for (int j=0; j<stacks; j++, r+=dr, t+=dt, z+=dz) {
       float s = 0.0f;
-      gl.begin (GL.QUAD_STRIP);
+      gl.begin (GLConstant.QUAD_STRIP);
 
       for (int i=0; i<=slices; i++, s+=ds) {
         double theta = i == slices ? 0.0f : i*dtheta;
@@ -99,14 +99,14 @@ public class Quadric {
         float vx, vy, vz;
         
         cylinder_normal (x, y, nz);
-        if (texture) gl.tex_coord2f (s, t);
+        if (texture) gl.texCoord2f(s, t);
         vx = (float) (x * r);
         vy = (float) (y * r);
         vz = z;
         gl.vertex3f (vx, vy, vz);
 
         cylinder_normal (x, y, nz);
-        if (texture) gl.tex_coord2f (s, t+dt);
+        if (texture) gl.texCoord2f(s, t+dt);
         vx = (float) (x * (r + dr));
         vy = (float) (y * (r + dr));
         vz = (float) (z + dz);
@@ -124,14 +124,14 @@ public class Quadric {
 
     // draw rings
     for (int j=0; j<=stacks; j++, r+=dr, z+=dz) {
-      gl.begin (GL.LINE_LOOP);
+      gl.begin (GLConstant.LINE_LOOP);
       cylinder_draw (z, r);
       gl.end ();
     }
 
 
     // draw length lines
-    gl.begin (GL.LINES);
+    gl.begin (GLConstant.LINES);
     cylinder_draw (0.0f, base_radius);
     cylinder_draw ((float) height, top_radius);
     gl.end ();
@@ -152,18 +152,18 @@ public class Quadric {
   private void cylinder_silhouette () {
     // draw one ring at each end
     if (base_radius != 0.0) {
-      gl.begin (GL.LINE_LOOP);
+      gl.begin (GLConstant.LINE_LOOP);
       cylinder_draw (0.0f, base_radius);
       gl.end ();
 
-      gl.begin (GL.LINE_LOOP);
+      gl.begin (GLConstant.LINE_LOOP);
       cylinder_draw ((float) height, top_radius);
       gl.end ();
     }
 
 
     // draw length lines
-    gl.begin (GL.LINES);
+    gl.begin (GLConstant.LINES);
     cylinder_draw ((float) height, base_radius);
     cylinder_draw (0.0f, top_radius);
     gl.end ();
@@ -201,7 +201,7 @@ public class Quadric {
     // loops
     r = inner_radius;
     for (int l=0; l<=loops; l++, r+=dr) {
-      gl.begin (GL.LINE_LOOP);
+      gl.begin (GLConstant.LINE_LOOP);
 
       theta = 0;
       for (int s=0; s<slices; s++, theta+=dtheta) {
@@ -219,7 +219,7 @@ public class Quadric {
     for (int s=0; s<slices; s++, theta+=dtheta) {
       double x = (float) Math.sin (theta);
       double y = (float) Math.cos (theta);
-      gl.begin (GL.LINE_STRIP);
+      gl.begin (GLConstant.LINE_STRIP);
 
       r = inner_radius;            
       for (int l=0; l<=loops; l++, r+=dr) {
@@ -264,7 +264,7 @@ public class Quadric {
     disk_silhouette_ring (inner_radius);
 
     // spokes
-    gl.begin (GL.LINES);
+    gl.begin (GLConstant.LINES);
     double stop_radian = start_radian + sweep_radian;
     double a0 = Math.sin (start_radian);
     double b0 = Math.cos (start_radian);
@@ -280,7 +280,7 @@ public class Quadric {
 
   private void disk_silhouette_ring (double radius) {
     double theta = start_radian;
-    gl.begin (GL.LINE_STRIP);
+    gl.begin (GLConstant.LINE_STRIP);
 
     for (int s=0; s<=slices; s++, theta+=dtheta) {
       double x = radius * Math.sin (theta);
@@ -343,7 +343,7 @@ public class Quadric {
 
 
   private void sphere_fill_draw_negative_z () {
-    gl.begin (GL.TRIANGLE_FAN);
+    gl.begin (GLConstant.TRIANGLE_FAN);
     gl.normal3f (0.0f, 0.0f, -1.0f); // negative
     float z = (float) (-nsign * radius); // negative
     gl.vertex3f (0.0f, 0.0f, z);
@@ -358,7 +358,7 @@ public class Quadric {
     
 
   private void sphere_fill_draw_positive_z () {   
-    gl.begin (GL.TRIANGLE_FAN);
+    gl.begin (GLConstant.TRIANGLE_FAN);
     gl.normal3f (0.0f, 0.0f, 1.0f); // positive
     float z = (float) (nsign * radius); // positive
     gl.vertex3f (0.0f, 0.0f, z);
@@ -381,15 +381,15 @@ public class Quadric {
     for (int i=imin; i<imax; i++, t-=dt) {
       double rho = i * drho;
       float s = 0.0f;
-      gl.begin (GL.QUAD_STRIP);
+      gl.begin (GLConstant.QUAD_STRIP);
       
       for (int j=0; j<=slices; j++, s+=ds) {
         double theta = j == slices ? 0.0f : j * dtheta;
         sphere_fill_draw_slice (theta, rho); // vs. rho+drho
-        if (texture) gl.tex_coord2f (s, t);
+        if (texture) gl.texCoord2f (s, t);
 
         sphere_fill_draw_slice (theta, rho+drho); // vs. rho
-        if (texture) gl.tex_coord2f (s, t-dt);
+        if (texture) gl.texCoord2f (s, t-dt);
       }
 
       gl.end ();
@@ -401,7 +401,7 @@ public class Quadric {
     // draw stack lines
     for (int i=1; i<stacks; i++) {
       double rho = i * drho;     // no i==0
-      gl.begin (GL.LINE_LOOP);
+      gl.begin (GLConstant.LINE_LOOP);
       
       for (int j=0; j<slices; j++) {
         double theta = j * dtheta;
@@ -414,7 +414,7 @@ public class Quadric {
     // draw slice lines
     for (int j=0; j<slices; j++) {
       double theta = j * dtheta;
-      gl.begin (GL.LINE_STRIP);
+      gl.begin (GLConstant.LINE_STRIP);
 
       for (int i=0; i<=stacks; i++) {
         double rho = i * drho;     
