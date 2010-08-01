@@ -4,91 +4,101 @@ package gnu.x11.keysym;
 /**
  * Thai-specific keyboard symbols. Imported from
  * <code>XK_THAI</code> section of
- * <code>/usr/include/X11/keysymdef.h</code>. Note that byte 3 = 0x0d. 
+ * <code>/usr/include/X11/keysymdef.h</code>. Note that byte 3(0x0d. 
  */
-public class Thai {
-  public static final int KOKAI = 0xda1;
-  public static final int KHOKHAI = 0xda2;
-  public static final int KHOKHUAT = 0xda3;
-  public static final int KHOKHWAI = 0xda4;
-  public static final int KHOKHON = 0xda5;
-  public static final int KHORAKHANG = 0xda6;  
-  public static final int NGONGU = 0xda7;  
-  public static final int CHOCHAN = 0xda8;  
-  public static final int CHOCHING = 0xda9;   
-  public static final int CHOCHANG = 0xdaa;  
-  public static final int SOSO = 0xdab;
-  public static final int CHOCHOE = 0xdac;
-  public static final int YOYING = 0xdad;
-  public static final int DOCHADA = 0xdae;
-  public static final int TOPATAK = 0xdaf;
-  public static final int THOTHAN = 0xdb0;
-  public static final int THONANGMONTHO = 0xdb1;
-  public static final int THOPHUTHAO = 0xdb2;
-  public static final int NONEN = 0xdb3;
-  public static final int DODEK = 0xdb4;
-  public static final int TOTAO = 0xdb5;
-  public static final int THOTHUNG = 0xdb6;
-  public static final int THOTHAHAN = 0xdb7;
-  public static final int THOTHONG = 0xdb8;
-  public static final int NONU = 0xdb9;
-  public static final int BOBAIMAI = 0xdba;
-  public static final int POPLA = 0xdbb;
-  public static final int PHOPHUNG = 0xdbc;
-  public static final int FOFA = 0xdbd;
-  public static final int PHOPHAN = 0xdbe;
-  public static final int FOFAN = 0xdbf;
-  public static final int PHOSAMPHAO = 0xdc0;
-  public static final int MOMA = 0xdc1;
-  public static final int YOYAK = 0xdc2;
-  public static final int RORUA = 0xdc3;
-  public static final int RU = 0xdc4;
-  public static final int LOLING = 0xdc5;
-  public static final int LU = 0xdc6;
-  public static final int WOWAEN = 0xdc7;
-  public static final int SOSALA = 0xdc8;
-  public static final int SORUSI = 0xdc9;
-  public static final int SOSUA = 0xdca;
-  public static final int HOHIP = 0xdcb;
-  public static final int LOCHULA = 0xdcc;
-  public static final int OANG = 0xdcd;
-  public static final int HONOKHUK = 0xdce;
-  public static final int PAIYANNOI = 0xdcf;
-  public static final int SARAA = 0xdd0;
-  public static final int MAIHANAKAT = 0xdd1;
-  public static final int SARAAA = 0xdd2;
-  public static final int SARAAM = 0xdd3;
-  public static final int SARAI = 0xdd4;   
-  public static final int SARAII = 0xdd5;   
-  public static final int SARAUE = 0xdd6;    
-  public static final int SARAUEE = 0xdd7;    
-  public static final int SARAU = 0xdd8;    
-  public static final int SARAUU = 0xdd9;   
-  public static final int PHINTHU = 0xdda;
-  public static final int MAIHANAKAT_MAITHO = 0xdde;
-  public static final int BAHT = 0xddf;
-  public static final int SARAE = 0xde0;    
-  public static final int SARAAE = 0xde1;
-  public static final int SARAO = 0xde2;
-  public static final int SARAAIMAIMUAN = 0xde3;   
-  public static final int SARAAIMAIMALAI = 0xde4;  
-  public static final int LAKKHANGYAO = 0xde5;
-  public static final int MAIYAMOK = 0xde6;
-  public static final int MAITAIKHU = 0xde7;
-  public static final int MAIEK = 0xde8;   
-  public static final int MAITHO = 0xde9;
-  public static final int MAITRI = 0xdea;
-  public static final int MAICHATTAWA = 0xdeb;
-  public static final int THANTHAKHAT = 0xdec;
-  public static final int NIKHAHIT = 0xded;
-  public static final int LEKSUN = 0xdf0; 
-  public static final int LEKNUNG = 0xdf1;  
-  public static final int LEKSONG = 0xdf2; 
-  public static final int LEKSAM = 0xdf3;
-  public static final int LEKSI = 0xdf4;  
-  public static final int LEKHA = 0xdf5;  
-  public static final int LEKHOK = 0xdf6;  
-  public static final int LEKCHET = 0xdf7;  
-  public static final int LEKPAET = 0xdf8;  
-  public static final int LEKKAO = 0xdf9; 
+public enum Thai {
+   KOKAI(0xda1),
+   KHOKHAI(0xda2),
+   KHOKHUAT(0xda3),
+   KHOKHWAI(0xda4),
+   KHOKHON(0xda5),
+   KHORAKHANG(0xda6),  
+   NGONGU(0xda7),  
+   CHOCHAN(0xda8),  
+   CHOCHING(0xda9),   
+   CHOCHANG(0xdaa),  
+   SOSO(0xdab),
+   CHOCHOE(0xdac),
+   YOYING(0xdad),
+   DOCHADA(0xdae),
+   TOPATAK(0xdaf),
+   THOTHAN(0xdb0),
+   THONANGMONTHO(0xdb1),
+   THOPHUTHAO(0xdb2),
+   NONEN(0xdb3),
+   DODEK(0xdb4),
+   TOTAO(0xdb5),
+   THOTHUNG(0xdb6),
+   THOTHAHAN(0xdb7),
+   THOTHONG(0xdb8),
+   NONU(0xdb9),
+   BOBAIMAI(0xdba),
+   POPLA(0xdbb),
+   PHOPHUNG(0xdbc),
+   FOFA(0xdbd),
+   PHOPHAN(0xdbe),
+   FOFAN(0xdbf),
+   PHOSAMPHAO(0xdc0),
+   MOMA(0xdc1),
+   YOYAK(0xdc2),
+   RORUA(0xdc3),
+   RU(0xdc4),
+   LOLING(0xdc5),
+   LU(0xdc6),
+   WOWAEN(0xdc7),
+   SOSALA(0xdc8),
+   SORUSI(0xdc9),
+   SOSUA(0xdca),
+   HOHIP(0xdcb),
+   LOCHULA(0xdcc),
+   OANG(0xdcd),
+   HONOKHUK(0xdce),
+   PAIYANNOI(0xdcf),
+   SARAA(0xdd0),
+   MAIHANAKAT(0xdd1),
+   SARAAA(0xdd2),
+   SARAAM(0xdd3),
+   SARAI(0xdd4),   
+   SARAII(0xdd5),   
+   SARAUE(0xdd6),    
+   SARAUEE(0xdd7),    
+   SARAU(0xdd8),    
+   SARAUU(0xdd9),   
+   PHINTHU(0xdda),
+   MAIHANAKAT_MAITHO(0xdde),
+   BAHT(0xddf),
+   SARAE(0xde0),    
+   SARAAE(0xde1),
+   SARAO(0xde2),
+   SARAAIMAIMUAN(0xde3),   
+   SARAAIMAIMALAI(0xde4),  
+   LAKKHANGYAO(0xde5),
+   MAIYAMOK(0xde6),
+   MAITAIKHU(0xde7),
+   MAIEK(0xde8),   
+   MAITHO(0xde9),
+   MAITRI(0xdea),
+   MAICHATTAWA(0xdeb),
+   THANTHAKHAT(0xdec),
+   NIKHAHIT(0xded),
+   LEKSUN(0xdf0), 
+   LEKNUNG(0xdf1),  
+   LEKSONG(0xdf2), 
+   LEKSAM(0xdf3),
+   LEKSI(0xdf4),  
+   LEKHA(0xdf5),  
+   LEKHOK(0xdf6),  
+   LEKCHET(0xdf7),  
+   LEKPAET(0xdf8),  
+   LEKKAO(0xdf9);
+   
+   private int code;
+   
+   public int getCode() {
+       return this.code;
+   }
+   
+   Thai(int code) {
+       this.code = code;
+   }
 }

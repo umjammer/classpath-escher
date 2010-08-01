@@ -5,115 +5,126 @@ package gnu.x11.keysym;
  * ISO 9995-specific keyboard symbols. Imported from
  * <code>XK_XKB_KEYS</code> section of
  * <code>/usr/include/X11/keysymdef.h</code>. 
- * Note that byte 3 = 0xfe.
+ * Note that byte 3(0xfe.
  */
-public class XKB {
-  public static final int LOCK = 0xfe01;
-  public static final int LEVEL2_LATCH = 0xfe02;
-  public static final int LEVEL3_SHIFT = 0xfe03;
-  public static final int LEVEL3_LATCH = 0xfe04;
-  public static final int LEVEL3_LOCK = 0xfe05;
-  public static final int GROUP_SHIFT = 0xff7e; /* alias for mode_switch */
-  public static final int GROUP_LATCH = 0xfe06;
-  public static final int GROUP_LOCK = 0xfe07;
-  public static final int NEXT_GROUP = 0xfe08;
-  public static final int NEXT_GROUP_LOCK = 0xfe09;
-  public static final int PREV_GROUP = 0xfe0a;
-  public static final int PREV_GROUP_LOCK = 0xfe0b;
-  public static final int FIRST_GROUP = 0xfe0c;
-  public static final int FIRST_GROUP_LOCK = 0xfe0d;
-  public static final int LAST_GROUP = 0xfe0e;
-  public static final int LAST_GROUP_LOCK = 0xfe0f;
+public enum XKB {
+   LOCK(0xfe01),
+   LEVEL2_LATCH(0xfe02),
+   LEVEL3_SHIFT(0xfe03),
+   LEVEL3_LATCH(0xfe04),
+   LEVEL3_LOCK(0xfe05),
+   GROUP_SHIFT(0xff7e), /* alias for mode_switch */
+   GROUP_LATCH(0xfe06),
+   GROUP_LOCK(0xfe07),
+   NEXT_GROUP(0xfe08),
+   NEXT_GROUP_LOCK(0xfe09),
+   PREV_GROUP(0xfe0a),
+   PREV_GROUP_LOCK(0xfe0b),
+   FIRST_GROUP(0xfe0c),
+   FIRST_GROUP_LOCK(0xfe0d),
+   LAST_GROUP(0xfe0e),
+   LAST_GROUP_LOCK(0xfe0f),
 
-  public static final int LEFT_TAB = 0xfe20;;
-  public static final int MOVE_LINE_UP = 0xfe21;
-  public static final int MOVE_LINE_DOWN = 0xfe22;
-  public static final int PARTIAL_LINE_UP = 0xfe23;
-  public static final int PARTIAL_LINE_DOWN = 0xfe24;
-  public static final int PARTIAL_SPACE_LEFT = 0xfe25;
-  public static final int PARTIAL_SPACE_RIGHT = 0xfe26;
-  public static final int SET_MARGIN_LEFT = 0xfe27;
-  public static final int SET_MARGIN_RIGHT = 0xfe28;
-  public static final int RELEASE_MARGIN_LEFT = 0xfe29;
-  public static final int RELEASE_MARGIN_RIGHT = 0xfe2a;
-  public static final int RELEASE_BOTH_MARGINS = 0xfe2b;
-  public static final int FAST_CURSOR_LEFT = 0xfe2c;
-  public static final int FAST_CURSOR_RIGHT = 0xfe2d;
-  public static final int FAST_CURSOR_UP = 0xfe2e;
-  public static final int FAST_CURSOR_DOWN = 0xfe2f;
-  public static final int CONTINUOUS_UNDERLINE = 0xfe30;
-  public static final int DISCONTINUOUS_UNDERLINE = 0xfe31;
-  public static final int EMPHASIZE = 0xfe32;
-  public static final int CENTER_OBJECT = 0xfe33;
-  public static final int ENTER = 0xfe34;
+   LEFT_TAB(0xfe20),
+   MOVE_LINE_UP(0xfe21),
+   MOVE_LINE_DOWN(0xfe22),
+   PARTIAL_LINE_UP(0xfe23),
+   PARTIAL_LINE_DOWN(0xfe24),
+   PARTIAL_SPACE_LEFT(0xfe25),
+   PARTIAL_SPACE_RIGHT(0xfe26),
+   SET_MARGIN_LEFT(0xfe27),
+   SET_MARGIN_RIGHT(0xfe28),
+   RELEASE_MARGIN_LEFT(0xfe29),
+   RELEASE_MARGIN_RIGHT(0xfe2a),
+   RELEASE_BOTH_MARGINS(0xfe2b),
+   FAST_CURSOR_LEFT(0xfe2c),
+   FAST_CURSOR_RIGHT(0xfe2d),
+   FAST_CURSOR_UP(0xfe2e),
+   FAST_CURSOR_DOWN(0xfe2f),
+   CONTINUOUS_UNDERLINE(0xfe30),
+   DISCONTINUOUS_UNDERLINE(0xfe31),
+   EMPHASIZE(0xfe32),
+   CENTER_OBJECT(0xfe33),
+   ENTER(0xfe34),
 
-  public static final int DEAD_GRAVE = 0xfe50;;
-  public static final int DEAD_ACUTE = 0xfe51;
-  public static final int DEAD_CIRCUMFLEX = 0xfe52;
-  public static final int DEAD_TILDE = 0xfe53;
-  public static final int DEAD_MACRON = 0xfe54;
-  public static final int DEAD_BREVE = 0xfe55;
-  public static final int DEAD_ABOVEDOT = 0xfe56;
-  public static final int DEAD_DIAERESIS = 0xfe57;
-  public static final int DEAD_ABOVERING = 0xfe58;
-  public static final int DEAD_DOUBLEACUTE = 0xfe59;
-  public static final int DEAD_CARON = 0xfe5a;
-  public static final int DEAD_CEDILLA = 0xfe5b;
-  public static final int DEAD_OGONEK = 0xfe5c;
-  public static final int DEAD_IOTA = 0xfe5d;
-  public static final int DEAD_VOICED_SOUND = 0xfe5e;
-  public static final int DEAD_SEMIVOICED_SOUND = 0xfe5f;
-  public static final int DEAD_BELOWDOT = 0xfe60;
-  public static final int DEAD_HOOK = 0xfe61;
-  public static final int DEAD_HORN = 0xfe62;
+   DEAD_GRAVE(0xfe50),
+   DEAD_ACUTE(0xfe51),
+   DEAD_CIRCUMFLEX(0xfe52),
+   DEAD_TILDE(0xfe53),
+   DEAD_MACRON(0xfe54),
+   DEAD_BREVE(0xfe55),
+   DEAD_ABOVEDOT(0xfe56),
+   DEAD_DIAERESIS(0xfe57),
+   DEAD_ABOVERING(0xfe58),
+   DEAD_DOUBLEACUTE(0xfe59),
+   DEAD_CARON(0xfe5a),
+   DEAD_CEDILLA(0xfe5b),
+   DEAD_OGONEK(0xfe5c),
+   DEAD_IOTA(0xfe5d),
+   DEAD_VOICED_SOUND(0xfe5e),
+   DEAD_SEMIVOICED_SOUND(0xfe5f),
+   DEAD_BELOWDOT(0xfe60),
+   DEAD_HOOK(0xfe61),
+   DEAD_HORN(0xfe62),
 
-  public static final int FIRST_VIRTUAL_SCREEN = 0xfed0;;
-  public static final int PREV_VIRTUAL_SCREEN = 0xfed1;
-  public static final int NEXT_VIRTUAL_SCREEN = 0xfed2;
-  public static final int LAST_VIRTUAL_SCREEN = 0xfed4;
-  public static final int TERMINATE_SERVER = 0xfed5;
+   FIRST_VIRTUAL_SCREEN(0xfed0),
+   PREV_VIRTUAL_SCREEN(0xfed1),
+   NEXT_VIRTUAL_SCREEN(0xfed2),
+   LAST_VIRTUAL_SCREEN(0xfed4),
+   TERMINATE_SERVER(0xfed5),
 
-  public static final int ACCESS_X_ENABLE = 0xfe70;;
-  public static final int ACCESS_X_FEEDBACK_ENABLE = 0xfe71;
-  public static final int REPEAT_KEYS_ENABLE = 0xfe72;
-  public static final int SLOW_KEYS_ENABLE = 0xfe73;
-  public static final int BOUNCE_KEYS_ENABLE = 0xfe74;
-  public static final int STICKY_KEYS_ENABLE = 0xfe75;
-  public static final int MOUSE_KEYS_ENABLE = 0xfe76;
-  public static final int MOUSE_KEYS_ACCEL_ENABLE = 0xfe77;
-  public static final int OVERLAY1_ENABLE = 0xfe78;
-  public static final int OVERLAY2_ENABLE = 0xfe79;
-  public static final int AUDIBLE_BELL_ENABLE = 0xfe7a;
+   ACCESS_X_ENABLE(0xfe70),
+   ACCESS_X_FEEDBACK_ENABLE(0xfe71),
+   REPEAT_KEYS_ENABLE(0xfe72),
+   SLOW_KEYS_ENABLE(0xfe73),
+   BOUNCE_KEYS_ENABLE(0xfe74),
+   STICKY_KEYS_ENABLE(0xfe75),
+   MOUSE_KEYS_ENABLE(0xfe76),
+   MOUSE_KEYS_ACCEL_ENABLE(0xfe77),
+   OVERLAY1_ENABLE(0xfe78),
+   OVERLAY2_ENABLE(0xfe79),
+   AUDIBLE_BELL_ENABLE(0xfe7a),
 
-  public static final int POINTER_LEFT = 0xfee0;;
-  public static final int POINTER_RIGHT = 0xfee1;
-  public static final int POINTER_UP = 0xfee2;
-  public static final int POINTER_DOWN = 0xfee3;
-  public static final int POINTER_UP_LEFT = 0xfee4;
-  public static final int POINTER_UP_RIGHT = 0xfee5;
-  public static final int POINTER_DOWN_LEFT = 0xfee6;
-  public static final int POINTER_DOWN_RIGHT = 0xfee7;
-  public static final int POINTER_BUTTON_DFLT = 0xfee8;
-  public static final int POINTER_BUTTON1 = 0xfee9;
-  public static final int POINTER_BUTTON2 = 0xfeea;
-  public static final int POINTER_BUTTON3 = 0xfeeb;
-  public static final int POINTER_BUTTON4 = 0xfeec;
-  public static final int POINTER_BUTTON5 = 0xfeed;
-  public static final int POINTER_DBL_CLICK_DFLT = 0xfeee;
-  public static final int POINTER_DBL_CLICK1 = 0xfeef;
-  public static final int POINTER_DBL_CLICK2 = 0xfef0;
-  public static final int POINTER_DBL_CLICK3 = 0xfef1;
-  public static final int POINTER_DBL_CLICK4 = 0xfef2;
-  public static final int POINTER_DBL_CLICK5 = 0xfef3;
-  public static final int POINTER_DRAG_DFLT = 0xfef4;
-  public static final int POINTER_DRAG1 = 0xfef5;
-  public static final int POINTER_DRAG2 = 0xfef6;
-  public static final int POINTER_DRAG3 = 0xfef7;
-  public static final int POINTER_DRAG4 = 0xfef8;
-  public static final int POINTER_DRAG5 = 0xfefd;
+   POINTER_LEFT(0xfee0),
+   POINTER_RIGHT(0xfee1),
+   POINTER_UP(0xfee2),
+   POINTER_DOWN(0xfee3),
+   POINTER_UP_LEFT(0xfee4),
+   POINTER_UP_RIGHT(0xfee5),
+   POINTER_DOWN_LEFT(0xfee6),
+   POINTER_DOWN_RIGHT(0xfee7),
+   POINTER_BUTTON_DFLT(0xfee8),
+   POINTER_BUTTON1(0xfee9),
+   POINTER_BUTTON2(0xfeea),
+   POINTER_BUTTON3(0xfeeb),
+   POINTER_BUTTON4(0xfeec),
+   POINTER_BUTTON5(0xfeed),
+   POINTER_DBL_CLICK_DFLT(0xfeee),
+   POINTER_DBL_CLICK1(0xfeef),
+   POINTER_DBL_CLICK2(0xfef0),
+   POINTER_DBL_CLICK3(0xfef1),
+   POINTER_DBL_CLICK4(0xfef2),
+   POINTER_DBL_CLICK5(0xfef3),
+   POINTER_DRAG_DFLT(0xfef4),
+   POINTER_DRAG1(0xfef5),
+   POINTER_DRAG2(0xfef6),
+   POINTER_DRAG3(0xfef7),
+   POINTER_DRAG4(0xfef8),
+   POINTER_DRAG5(0xfefd),
 
-  public static final int POINTER_ENABLE_KEYS = 0xfef9;;
-  public static final int POINTER_ACCELERATE = 0xfefa;
-  public static final int POINTER_DFLT_BTN_NEXT = 0xfefb;
-  public static final int POINTER_DFLT_BTN_PREV = 0xfefc;
+   POINTER_ENABLE_KEYS(0xfef9),
+   POINTER_ACCELERATE(0xfefa),
+   POINTER_DFLT_BTN_NEXT(0xfefb),
+   POINTER_DFLT_BTN_PREV(0xfefc);
+   
+   
+   private int code;
+   
+   public int getCode() {
+       return this.code;
+   }
+   
+   XKB(int code) {
+       this.code = code;
+   }
 }
