@@ -1,5 +1,8 @@
 package gnu.x11.keysym;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Miscellaneous keyboard symbols. Imported from <code>XK_MISCELLANY</code>
@@ -240,8 +243,8 @@ public enum Misc {
    SUPER_L(0xffeb), /* left super */
    SUPER_R(0xffec), /* right super */
    HYPER_L(0xffed), /* left hyper */
-   HYPER_R(0xffee); /* right hyper */  
-   
+   HYPER_R(0xffee), /* right hyper */  
+   UNKNOWN_KEY(-1);
    
    private int code;
    
@@ -251,5 +254,22 @@ public enum Misc {
    
    Misc(int code) {
        this.code = code;
+   }
+   
+   private static Map<Integer, Misc> keyCodes;
+   
+   private static Map<Integer, Misc> getKeyCodes() {
+       if (keyCodes == null) {
+           keyCodes = new HashMap<Integer, Misc>();
+           for (Misc key : Misc.values())
+               keyCodes.put(key.code, key);
+       }
+       
+       return keyCodes;
+   }
+   
+   public static Misc getCode(int id) {
+     Misc code = getKeyCodes().get(id);
+     return (code == null) ? UNKNOWN_KEY : code;
    }
 }

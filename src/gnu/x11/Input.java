@@ -497,7 +497,7 @@ public class Input {
   /**
    * @see <a href="XGetPointerMapping.html">XGetPointerMapping</a>
    */
-  public byte [] getPointerMapping () {
+  public byte [] getPointerMapping() {
 
     byte [] map;
     RequestOutputStream o = display.getResponseOutputStream();
@@ -600,7 +600,7 @@ public class Input {
    *
    * @return the keysym for the specified key code and modifier mask
    */
-  public int keycodeToKeysym (int keycode, int keystate) {
+  public int keycodeToKeysym(int keycode, int keystate) {
     return keycodeToKeysym(keycode, keystate, false);
   }
 
@@ -617,7 +617,7 @@ public class Input {
    *
    * @return the keysym for the specified key code and modifier mask
    */
-  public int keycodeToKeysym (int keycode, int keystate,
+  public int keycodeToKeysym(int keycode, int keystate,
                                 boolean ignore_modifiers) {
     if (keycode > maxKeycode) 
       throw new java.lang.Error ("Invalid keycode: " + keycode);

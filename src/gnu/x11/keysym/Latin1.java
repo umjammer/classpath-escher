@@ -1,5 +1,8 @@
 package gnu.x11.keysym;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Latin 1-specific keyboard symbols. Imported from
@@ -204,8 +207,9 @@ public enum Latin1 {
    U_DIAERESIS_SMALL(0x0fc),
    YA_CUTE_SMALL(0x0fd),
    T_HORN_SMALL(0x0fe),
-   Y_DIAERESIS_SMALL(0x0ff);
-  
+   Y_DIAERESIS_SMALL(0x0ff),
+   UNKNOWN_KEY(-1);
+
   
   private int code;
   
@@ -215,5 +219,22 @@ public enum Latin1 {
   
   Latin1(int code) {
       this.code = code;
+  }
+  
+  private static Map<Integer, Latin1> keyCodes;
+  
+  private static Map<Integer, Latin1> getKeyCodes() {
+      if (keyCodes == null) {
+          keyCodes = new HashMap<Integer, Latin1>();
+          for (Latin1 key : Latin1.values())
+              keyCodes.put(key.code, key);
+      }
+      
+      return keyCodes;
+  }
+  
+  public static Latin1 getCode(int id) {
+    Latin1 code = getKeyCodes().get(id);
+    return (code == null) ? UNKNOWN_KEY : code;
   }
 }
