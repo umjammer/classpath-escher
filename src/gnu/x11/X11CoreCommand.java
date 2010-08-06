@@ -1,5 +1,7 @@
 package gnu.x11;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Enum class describing X11 Core commands.
  * 
@@ -34,10 +36,27 @@ public enum X11CoreCommand implements X11Command
         return this.length;
     }
 
-//    @Override
+    //    @Override
     public int getOpcode()
     {
         return this.opcode;
+    }
+
+    @Override
+    public Class<? extends Annotation> annotationType() {
+        return this.getClass();
+    }
+
+    //@Override
+    public int opcode() {
+        // TODO Auto-generated method stub
+        return opcode;
+    }
+
+    //@Override
+    public int length() {
+        // TODO Auto-generated method stub
+        return length;
     }
 
 }

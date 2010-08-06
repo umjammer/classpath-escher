@@ -12,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -475,40 +476,61 @@ public class Display {
     /**
      * @see <a href="XGetSelectionOwner.html">XGetSelectionOwner</a>
      */
+    @X11Command(opcode = 23, length = 2)
     public Window selectionOwner(Atom selection) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("selectionOwner", Atom.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
-        int owner_id = -1;
+        int ownerId = -1;
         synchronized (o) {
-            o.beginRequest(23, 0, 2);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             o.writeInt32(selection.getID());
             ResponseInputStream i = inputStream;
             synchronized (i) {
                 i.readReply(o);
                 i.skip(8);
-                owner_id = i.readInt32();
+                ownerId = i.readInt32();
                 i.skip(20);
             }
         }
-        return (Window) Window.intern(this, owner_id);
+        return (Window) Window.intern(this, ownerId);
     }
 
     // opcode 36 - grab server
+    @X11Command(opcode = 36, length = 1)
     public synchronized void grabServer() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("grabServer").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(36, 0, 1);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             o.send();
         }
     }
 
     // opcode 37 - ungrab server
+    @X11Command(opcode = 37, length = 1)
     public void ungrabServer() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("ungrabServer").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(37, 0, 1);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             o.send();
         }
     }
@@ -519,15 +541,22 @@ public class Display {
      *         {@link Enum#next_string()}
      * @see <a href="XListFonts.html">XListFonts</a>
      */
+    @X11Command(opcode = 49)
     public Font[] fonts(String pattern, int maxNameCount) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("fonts").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         int n = pattern.length();
         int p = RequestOutputStream.pad(n);
 
         RequestOutputStream o = outputStream;
         Font[] fonts = null;
         synchronized (o) {
-            o.beginRequest(49, 0, 2 + (n + p) / 4);
+            o.beginRequest(x11Command.opcode(), 0, 2 + (n + p) / 4);
             o.writeInt16(maxNameCount);
             o.writeInt16(n);
             o.writeString8(pattern);
@@ -557,6 +586,7 @@ public class Display {
     /**
      * @see <a href="XListFontsWithInfo.html">XListFontsWithInfo</a>
      */
+    @X11Command(opcode = 50)
     public Data fontsWithInfo(String pattern, int maxNameCount) {
 
         // FIXME: Implement.
@@ -567,8 +597,15 @@ public class Display {
     /**
      * @see <a href="XSetFontPath.html">XSetFontPath</a>
      */
+    @X11Command(opcode = 51)
     public void setFontPath(int count, String[] path) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("setFontPath", Integer.class, String[].class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         int n = 0;
         // TODO: Verify this
         for (int i = 0; i < path.length; i++) {
@@ -578,7 +615,7 @@ public class Display {
 
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(51, 0, 2 + (n + p) / 4);
+            o.beginRequest(x11Command.opcode(), 0, 2 + (n + p) / 4);
             o.writeInt16(path.length);
             o.skip(2);
             for (String ph : path) {
@@ -598,12 +635,19 @@ public class Display {
      * @see #setFontPath(int, String[])
      * @see <a href="XGetFontPath.html">XGetFontPath</a>
      */
+    @X11Command(opcode = 52, length = 1)
     public String[] fontPath() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("fontPath").getAnnotation(X11Command.class);
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         String[] path;
         synchronized (o) {
-            o.beginRequest(52, 0, 1);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             ResponseInputStream i = inputStream;
             synchronized (i) {
                 i.readReply(o);
@@ -687,15 +731,22 @@ public class Display {
      * @return
      * @see <a href="XQueryExtension.html">XQueryExtension</a>
      */
+    @X11Command(opcode = 98)
     public ExtensionInfo queryExtension(String name) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("queryExtension", String.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         int n = name.length();
         int p = RequestOutputStream.pad(n);
 
         ExtensionInfo info;
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(98, 0, 2 + (n + p) / 4);
+            o.beginRequest(x11Command.opcode(), 0, 2 + (n + p) / 4);
             o.writeInt16(n);
             o.skip(2);
             o.writeString8(name);
@@ -718,12 +769,19 @@ public class Display {
      * @return a list of all extensions supported by the server
      * @see <a href="XListExtensions.html">XListExtensions</a>
      */
+    @X11Command(opcode = 99, length = 1)
     public String[] extensions() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("extensions").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         String[] exts;
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(99, 9, 1);
+            o.beginRequest(x11Command.opcode(), 9, x11Command.length());
             ResponseInputStream i = inputStream;
             synchronized (i) {
                 i.readReply(o);
@@ -757,11 +815,18 @@ public class Display {
      *            see above
      * @see <a href="XBell.html">XBell</a>
      */
+    @X11Command(opcode = 104, length = 1)
     public void bell(int percent) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("bell", int.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(104, percent, 1);
+            o.beginRequest(x11Command.opcode(), percent, x11Command.length());
             o.send();
         }
     }
@@ -776,13 +841,23 @@ public class Display {
      *            valid: {@link #NO}, {@link #YES}, {@link #DEFAULT}
      * @see <a href="XSetScreenSaver.html">XSetScreenSaver</a>
      */
+    @X11Command(opcode = 107, length = 3)
     public void setScreenSaver(int timeout, int interval,
                                  ScreenSaverBlanking preferBlanking,
                                  ScreenSaverExposures allowExposures) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("setScreenSaver", int.class,
+                                           int.class, ScreenSaverBlanking.class,
+                                           ScreenSaverExposures.class).
+                                           getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(107, 0, 3);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             o.writeInt16(timeout);
             o.writeInt16(interval);
             o.writeInt8(preferBlanking.getCodeID());
@@ -851,12 +926,19 @@ public class Display {
      * @return the screensaver control values
      * @see <a href="XGetScreenSaver.html">XGetScreenSaver</a>
      */
+    @X11Command(opcode = 108, length = 1)
     public ScreenSaverInfo screenSaver() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("screenSaver").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         ScreenSaverInfo info;
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(108, 0, 1);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             ResponseInputStream i = inputStream;
             synchronized (i) {
                 i.readReply(o);
@@ -875,6 +957,7 @@ public class Display {
      * @see <a href="XAddHost.html">XAddHost</a>
      * @see <a href="XRemoveHost.html">XRemoveHost</a>
      */
+    @X11Command(opcode = 109)
     public void changeHosts(Host.ChangeOperation mode, Host.InternetFamily family, byte[] host) {
 
         int n = host.length;
@@ -900,12 +983,19 @@ public class Display {
      * 
      * @see <a href="XListHosts.html">XListHosts</a>
      */
+    @X11Command(opcode = 110, length = 1)
     public HostsInfo listHosts() {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("listHosts").getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         HostsInfo info;
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(110, 0, 1);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             ResponseInputStream i = inputStream;
             synchronized (i) {
                 i.readReply(o);
@@ -922,11 +1012,18 @@ public class Display {
      *            valid: {@link #ENABLE}, {@link #DISABLE}
      * @see <a href="XSetAccessControl.html">XSetAccessControl</a>
      */
+    @X11Command(opcode = 111, length = 1)
     public void setAccessControl(Host.AccessControl mode) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("setAccessControl", Host.AccessControl.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(111, mode.getCode(), 1);
+            o.beginRequest(x11Command.opcode(), mode.getCode(), x11Command.length());
             o.send();
         }
     }
@@ -935,11 +1032,18 @@ public class Display {
     /**
      * @see <a href="XKillClient.html">XKillClient</a>
      */
+    @X11Command(opcode = 113, length = 2)
     public void killClient(Resource resource) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("killClient", Resource.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(113, 0, 2);
+            o.beginRequest(x11Command.opcode(), 0, x11Command.length());
             o.writeInt32(resource.id);
             o.send();
         }
@@ -952,11 +1056,18 @@ public class Display {
      *            {@link #RETAIN_TEMPORARY}
      * @see <a href="XSetCloseDownMode.html">XSetCloseDownMode</a>
      */
+    @X11Command(opcode = 112, length = 1)
     public void setCloseDownMode(Host.Shape mode) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("setCloseDownMode", Host.Shape.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(112, mode.getCode(), 1);
+            o.beginRequest(x11Command.opcode(), mode.getCode(), x11Command.length());
             o.send();
         }
     }
@@ -967,11 +1078,18 @@ public class Display {
      *            valid: {@link #ACTIVATE}, {@link #RESET}
      * @see <a href="XForceScreenSaver.html">XForceScreenSaver</a>
      */
+    @X11Command(opcode = 115, length = 1)
     public void forceScreenSaver(Host.ForceScreenSaver mode) {
-
+        X11Command x11Command = null;
+        try {
+            x11Command = this.getClass().getMethod("forceScreenSaver", Host.ForceScreenSaver.class).getAnnotation(X11Command.class);
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        
         RequestOutputStream o = outputStream;
         synchronized (o) {
-            o.beginRequest(115, mode.getCode(), 1);
+            o.beginRequest(x11Command.opcode(), mode.getCode(), x11Command.length());
             o.send();
         }
     }

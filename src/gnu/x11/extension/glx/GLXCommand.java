@@ -1,5 +1,7 @@
 package gnu.x11.extension.glx;
 
+import java.lang.annotation.Annotation;
+
 import gnu.x11.X11Command;
 
 /**
@@ -65,4 +67,22 @@ public enum GLXCommand implements X11Command {
 
         return this.opcode;
     }
+    
+    @Override
+    public Class<? extends Annotation> annotationType() {
+        return this.getClass();
+    }
+
+    //@Override
+    public int opcode() {
+        // TODO Auto-generated method stub
+        return opcode;
+    }
+
+    //@Override
+    public int length() {
+        // TODO Auto-generated method stub
+        return length;
+    }
+
 }
