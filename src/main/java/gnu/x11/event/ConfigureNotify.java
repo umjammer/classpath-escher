@@ -66,4 +66,7 @@ public final class ConfigureNotify extends Event {
     return new Rectangle (x (), y (), width (), height ());
   }
 
+  public int getWindowID() {
+    return windowID;
+  }
 }

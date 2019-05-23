@@ -1,27 +1,28 @@
 
 package gnu.x11;
 
-import gnu.x11.event.Event;
-import gnu.x11.extension.ErrorFactory;
-import gnu.x11.extension.EventFactory;
-import gnu.x11.extension.BigRequests;
-import gnu.x11.extension.NotFoundException;
-import gnu.x11.extension.XCMisc;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
+
+import gnu.x11.event.Event;
+import gnu.x11.extension.BigRequests;
+import gnu.x11.extension.ErrorFactory;
+import gnu.x11.extension.EventFactory;
+import gnu.x11.extension.NotFoundException;
+import gnu.x11.extension.XCMisc;
+import jnr.unixsocket.UnixSocket;
+import jnr.unixsocket.UnixSocketAddress;
+import jnr.unixsocket.UnixSocketChannel;
 
 /** X server connection. */
 // TODO Support Multiple Screens
@@ -240,19 +241,26 @@ public class Display {
     }
 
     /**
+     * @param screenNumber -1 if not specified, {@link #defaultScreenNumber} will be 0
      * @throws EscherServerConnectionException
      * @see <a href="XOpenDisplay.html">XOpenDisplay</a>
      */
     public Display(String hostname, int displayNumber, int screenNumber)
             throws EscherServerConnectionException {
         
-        setDefaultScreenNumber(screenNumber);
+        setDefaultScreenNumber(screenNumber != -1 ? screenNumber : 0);
         setHostname(hostname);
         setDisplayNumber(displayNumber);
         try {
-            System.out.println("Debugging");
-            System.out.println(hostname + ":" + displayNumber + "." + screenNumber);
-            socket = new Socket(hostname, 6000 + displayNumber);
+System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." + screenNumber);
+            if (hostname.startsWith("/")) {
+                String displayNmae = hostname + ":" + displayNumber + (screenNumber != -1 ? "." + screenNumber : "");
+                UnixSocketAddress address = new UnixSocketAddress(displayNmae);
+                UnixSocketChannel channel = UnixSocketChannel.open(address);
+                socket = new UnixSocket(channel);
+            } else {
+                socket = new Socket(hostname, 6000 + displayNumber);
+            }
             setSocket(socket);
         } catch (IOException ex) {
             handleException(ex);
@@ -1357,6 +1365,16 @@ public class Display {
 
         input = new Input(this, minKeycode, maxKeycode);
         input.keyboardMapping();
+    }
+
+    /** TODO fix me */
+    public boolean eventAvailable() {
+
+        try {
+            return inputStream.available() > 0;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public Event nextEvent() {

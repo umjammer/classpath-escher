@@ -3,7 +3,7 @@
 
   <groupId>escher</groupId>
   <artifactId>classpath-escher</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1</version>
   <packaging>jar</packaging>
 
   <name>Classpath Escher</name>
@@ -22,6 +22,12 @@
   </build>
 
   <dependencies>
+    <dependency>
+      <groupId>com.github.jnr</groupId>
+      <artifactId>jnr-unixsocket</artifactId>
+      <version>0.22</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
