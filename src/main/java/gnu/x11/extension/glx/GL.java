@@ -2780,6 +2780,8 @@ public class GL extends gnu.x11.Resource {
             case FOG_COLOR:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -2823,6 +2825,8 @@ public class GL extends gnu.x11.Resource {
                 break;
             case FOG_COLOR:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -2955,6 +2959,8 @@ public class GL extends gnu.x11.Resource {
             case POSITION:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -2998,6 +3004,8 @@ public class GL extends gnu.x11.Resource {
             case LIGHT_MODEL_AMBIENT:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -3039,6 +3047,8 @@ public class GL extends gnu.x11.Resource {
                 break;
             case LIGHT_MODEL_AMBIENT:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -3187,6 +3197,8 @@ public class GL extends gnu.x11.Resource {
             case EMISSION: // fall through
             case AMBIENT_AND_DIFFUSE:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -3340,6 +3352,8 @@ public class GL extends gnu.x11.Resource {
         case TEXTURE_BORDER_COLOR:
             n = 4;
             break;
+        default:
+            break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -3379,6 +3393,8 @@ public class GL extends gnu.x11.Resource {
                 break;
             case TEXTURE_BORDER_COLOR:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -3503,6 +3519,8 @@ public class GL extends gnu.x11.Resource {
             case TEXTURE_ENV_COLOR:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -3538,6 +3556,8 @@ public class GL extends gnu.x11.Resource {
                 break;
             case TEXTURE_ENV_COLOR:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -3582,6 +3602,8 @@ public class GL extends gnu.x11.Resource {
             case EYE_PLANE:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -3625,6 +3647,8 @@ public class GL extends gnu.x11.Resource {
             case EYE_PLANE:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -3661,6 +3685,8 @@ public class GL extends gnu.x11.Resource {
             case OBJECT_PLANE: // fall through
             case EYE_PLANE:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -4042,6 +4068,8 @@ public class GL extends gnu.x11.Resource {
             case MAP1_VERTEX_4:
                 k = 4;
                 break;
+            default:
+                break;
         }
 
         int n = order * k * 8;
@@ -4086,6 +4114,8 @@ public class GL extends gnu.x11.Resource {
             case MAP1_TEXTURE_COORD_4: // fall through
             case MAP1_VERTEX_4:
                 k = 4;
+                break;
+            default:
                 break;
         }
 
@@ -4132,6 +4162,8 @@ public class GL extends gnu.x11.Resource {
             case MAP2_TEXTURE_COORD_4: // fall through
             case MAP2_VERTEX_4:
                 k = 4;
+                break;
+            default:
                 break;
         }
 
@@ -4182,6 +4214,8 @@ public class GL extends gnu.x11.Resource {
             case MAP2_TEXTURE_COORD_4: // fall through
             case MAP2_VERTEX_4:
                 k = 4;
+                break;
+            default:
                 break;
         }
 
@@ -5241,6 +5275,8 @@ public class GL extends gnu.x11.Resource {
             case COLOR_TABLE_BIAS:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -5264,6 +5300,8 @@ public class GL extends gnu.x11.Resource {
             case COLOR_TABLE_SCALE: // fall through
             case COLOR_TABLE_BIAS:
                 n = 4;
+                break;
+            default:
                 break;
         }
 
@@ -5413,6 +5451,8 @@ public class GL extends gnu.x11.Resource {
             case CONVOLUTION_FILTER_BIAS:
                 n = 4;
                 break;
+            default:
+                break;
         }
 
         RequestOutputStream o = display.getResponseOutputStream();
@@ -5460,6 +5500,8 @@ public class GL extends gnu.x11.Resource {
             case CONVOLUTION_FILTER_SCALE: // fall through
             case CONVOLUTION_FILTER_BIAS:
                 n = 4;
+                break;
+            default:
                 break;
         }
 

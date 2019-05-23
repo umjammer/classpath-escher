@@ -246,12 +246,12 @@ public class ZPixmap extends Image {
             // outside for loop for speed
             if (imageByteOrder == LSB_FIRST) {
                 for (int j = 0; j < bytesPerPixel; j++) {
-                    pixel |=  (((int) data[i + j]) & 0xff) << (j * 8);
+                    pixel |=  ((data[i + j]) & 0xff) << (j * 8);
                 }
             } else {
                 // MSB_FIRST
                 for (int j = 0; j < bytesPerPixel; j++) {
-                    pixel |= (((int) data[i + j]) & 0xff)
+                    pixel |= ((data[i + j]) & 0xff)
                                 << ((bytesPerPixel - 1 - j) * 8);
                 }
             }

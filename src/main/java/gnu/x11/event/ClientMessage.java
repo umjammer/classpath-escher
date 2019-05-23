@@ -35,23 +35,23 @@ public final class ClientMessage extends Event {
   }
 
   public int wm_data () {
-      return  ((((int) data [0]) & 0xff) << 24 |
-               (((int) data [1]) & 0xff) << 16 |
-               (((int) data [2]) & 0xff) << 8  |
-               (((int) data [3]) & 0xff));
+      return  (((data [0]) & 0xff) << 24 |
+               ((data [1]) & 0xff) << 16 |
+               ((data [2]) & 0xff) << 8  |
+               ((data [3]) & 0xff));
   }
 
   public int wm_time () {
-    return ((((int) data [4]) & 0xff) << 24 |
-            (((int) data [5]) & 0xff) << 16 |
-            (((int) data [6]) & 0xff) << 8  |
-            (((int) data [7]) & 0xff));
+    return (((data [4]) & 0xff) << 24 |
+            ((data [5]) & 0xff) << 16 |
+            ((data [6]) & 0xff) << 8  |
+            ((data [7]) & 0xff));
   }
 
 
   public boolean deleteWindow () {
-    Atom wm_protocols = (Atom) Atom.intern (display, "WM_PROTOCOLS");
-    Atom wm_delete_window = (Atom) Atom.intern (display,
+    Atom wm_protocols = Atom.intern (display, "WM_PROTOCOLS");
+    Atom wm_delete_window = Atom.intern (display,
       "WM_DELETE_WINDOW");
 
     return format () == 32

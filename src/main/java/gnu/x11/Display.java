@@ -87,7 +87,7 @@ public class Display {
     /**
      * Contains all the visual info mapped by the ID.
      */
-    private HashMap<Integer, VisualInfo> visuals = new HashMap<Integer, VisualInfo>();
+    private HashMap<Integer, VisualInfo> visuals = new HashMap<>();
        
     private Pixmap.Format[] pixmapFormats;
 
@@ -128,13 +128,13 @@ public class Display {
     private GC defaultGC;
 
     // Resources
-    private Hashtable<Integer, Resource> resources = new Hashtable<Integer, Resource>(257);
+    private Hashtable<Integer, Resource> resources = new Hashtable<>(257);
 
     private int resourceIndex;
 
-    private Hashtable<Integer, Atom> atomIDs = new Hashtable<Integer, Atom>(257);
+    private Hashtable<Integer, Atom> atomIDs = new Hashtable<>(257);
 
-    private Hashtable<String, Atom> atoms = new Hashtable<String, Atom>(257);
+    private Hashtable<String, Atom> atoms = new Hashtable<>(257);
 
     // XCMisc
     private XCMisc xcmisc;
@@ -330,7 +330,7 @@ public class Display {
     public List<VisualInfo> getVisualInfo(VisualInfo template,
                                           int visualInfoMask) {
         
-        List<VisualInfo> visuals = new ArrayList<VisualInfo>();
+        List<VisualInfo> visuals = new ArrayList<>();
         
         // A visual is contained into a Depth object
         // and this is contained into the Screen object.

@@ -260,7 +260,7 @@ public enum Misc {
    
    private static Map<Integer, Misc> getKeyCodes() {
        if (keyCodes == null) {
-           keyCodes = new HashMap<Integer, Misc>();
+           keyCodes = new HashMap<>();
            for (Misc key : Misc.values())
                keyCodes.put(key.code, key);
        }

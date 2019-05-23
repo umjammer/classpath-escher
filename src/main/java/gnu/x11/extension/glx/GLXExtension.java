@@ -19,7 +19,7 @@ public enum GLXExtension {
     ;
 
     private static final Map<GLXVersion, ArrayList<GLXExtension>> extensions 
-        = new HashMap<GLXVersion, ArrayList<GLXExtension>>();
+        = new HashMap<>();
     
     static {
         for (GLXExtension extension : GLXExtension.values()) {

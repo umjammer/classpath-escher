@@ -54,7 +54,7 @@ public enum EventCode {
     
     private static Map<Integer, EventCode> getEventCodes() {
         if (eventCodes == null) {
-            eventCodes = new HashMap<Integer, EventCode>();
+            eventCodes = new HashMap<>();
             for (EventCode code : EventCode.values())
                 eventCodes.put(code.getCode(), code);
         }

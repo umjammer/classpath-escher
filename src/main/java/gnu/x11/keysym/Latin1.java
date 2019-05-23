@@ -225,7 +225,7 @@ public enum Latin1 {
   
   private static Map<Integer, Latin1> getKeyCodes() {
       if (keyCodes == null) {
-          keyCodes = new HashMap<Integer, Latin1>();
+          keyCodes = new HashMap<>();
           for (Latin1 key : Latin1.values())
               keyCodes.put(key.code, key);
       }

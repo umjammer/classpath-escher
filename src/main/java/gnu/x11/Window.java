@@ -433,7 +433,7 @@ public class Window extends Drawable implements GLXDrawable {
                 v = ((0xff & value[i * 4]) << 24)
                         | ((0xff & value[i * 4 + 1]) << 16)
                         | ((0xff & value[i * 4 + 2] << 8))
-                        | (0xff & ((int) value[i * 4 + 3]));
+                        | (0xff & (value[i * 4 + 3]));
                 break;
             default:
                 throw new ArrayIndexOutOfBoundsException();
@@ -2318,8 +2318,8 @@ public class Window extends Drawable implements GLXDrawable {
      */
     public void setWMProtocol(String name) {
 
-        Atom wmProtocols = (Atom) Atom.intern(display, "WM_PROTOCOLS");
-        Atom protocol = (Atom) Atom.intern(display, name);
+        Atom wmProtocols = Atom.intern(display, "WM_PROTOCOLS");
+        Atom protocol = Atom.intern(display, name);
 
         changeProperty(wmProtocols, Atom.ATOM, protocol.getID());
     }
@@ -2349,7 +2349,7 @@ public class Window extends Drawable implements GLXDrawable {
         // FIXME: Re-think WM -stuff. Maybe do outside of Window as this is
         // not in the core protocol.
 
-        Atom wmState = (Atom) Atom.intern(display, "WM_STATE");
+        Atom wmState = Atom.intern(display, "WM_STATE");
         int[] data = {
                         state.getCode(), icon.id
         };
@@ -2439,7 +2439,7 @@ public class Window extends Drawable implements GLXDrawable {
      */
     public boolean wmProtocol(String name) {
 
-        Atom protocol = (Atom) Atom.intern(display, name);
+        Atom protocol = Atom.intern(display, name);
         int[] list = wmProtocols();
 
         for (int i : list) {

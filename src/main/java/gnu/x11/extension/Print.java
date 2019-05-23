@@ -836,7 +836,7 @@ public class Print extends gnu.x11.extension.Extension
    */
   public Context createContext(String name) {
     if (name.length() == 0) {
-      Printer printer = (Printer) printerList() [0];
+      Printer printer = printerList() [0];
       name = printer.name();
     }
 

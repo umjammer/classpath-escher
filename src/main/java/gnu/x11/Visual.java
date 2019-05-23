@@ -18,7 +18,7 @@ public enum Visual {
     TrueColor(4),
     DirectColor(5);
 
-    private static final Map<Integer, Visual> visualsByID = new HashMap<Integer, Visual>();
+    private static final Map<Integer, Visual> visualsByID = new HashMap<>();
 
     static {
         

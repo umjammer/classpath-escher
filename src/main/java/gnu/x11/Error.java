@@ -162,7 +162,7 @@ public class Error extends java.lang.Error {
     
     private static Map<Integer, ErrorCode> getErrorCodes() {
         if (errorCodes == null) {
-            errorCodes = new HashMap<Integer, ErrorCode>();
+            errorCodes = new HashMap<>();
             for (ErrorCode code : ErrorCode.values())
                 errorCodes.put(code.errorID, code);
         }

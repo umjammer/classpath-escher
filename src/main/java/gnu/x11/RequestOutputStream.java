@@ -604,7 +604,7 @@ public class RequestOutputStream extends FilterOutputStream {
   }
 
   public void increaseLength (int i) {
-    int l = (((int) (buffer[requestIndex + 2] & 0xff)) << 8)
+    int l = ((buffer[requestIndex + 2] & 0xff) << 8)
             + (buffer[requestIndex + 3] & 0xff);
     l += i;
     buffer [requestIndex + 2] = (byte) (l >> 8);
