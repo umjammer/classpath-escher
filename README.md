@@ -1,4 +1,4 @@
-![Release](https://jitpack.io/#umjammer/classpath-escher)
+[![Release](https://jitpack.io/v/umjammer/classpath-escher.svg)](https://jitpack.io/#umjammer/classpath-escher)
 
 # Classpath Escher
 

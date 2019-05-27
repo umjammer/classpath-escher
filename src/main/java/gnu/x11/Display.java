@@ -1427,7 +1427,7 @@ System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." +
                     break;
                 }
             } catch (UnknownHostException ex) {
-                System.err.println("warning unknown host :" + auth.getHostname());
+                System.err.println("Display::getAuthority: unknown host:" + auth.getHostname());
             }
         }
         return found;
@@ -1452,7 +1452,7 @@ System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." +
             try {
                 inputStream.skip(inputStream.available());
             } catch (IOException ie) {
-                throw new java.lang.Error(
+                throw new java.lang.Error("Display::check_error: " +
                                           "Failed to clear socket input stream: "
                                                           + ie);
             }
