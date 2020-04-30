@@ -1,4 +1,4 @@
-[![Release](https://jitpack.io/v/umjammer/classpath-escher.svg)](https://jitpack.io/#umjammer/classpath-escher)
+[![Release](https://jitpack.io/v/umjammer/classpath-escher.svg)](https://jitpack.io/#umjammer/classpath-escher) [![Parent](https://img.shields.io/badge/Parent-caciocavallo-pink)](https://github.com/umjammer/caciocavallo)
 
 # Classpath Escher
 
