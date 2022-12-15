@@ -29,8 +29,8 @@ import jnr.unixsocket.UnixSocketChannel;
 public class Display {
 
     private static java.util.logging.Logger logger;
-    static {
 
+    static {
         logger = java.util.logging.Logger.getLogger("gnu.x11.Display");
         logger.setLevel(Level.ALL);
     }
@@ -331,7 +331,7 @@ System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." +
      * for the given screen, behaving like {@link #getVisualInfo()}.
      * 
      * 
-     * @param screenNo
+     * @param visualInfoMask
      * @param template
      * @return
      */
