@@ -18,4 +18,8 @@ public final class MapNotify extends Event {
     overrideRedirect = in.readBool ();
     in.skip (19);
   }
+
+  public int getWindowID() {
+    return windowID;
+  }
 }

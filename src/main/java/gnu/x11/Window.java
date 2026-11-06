@@ -411,6 +411,31 @@ public class Window extends Drawable implements GLXDrawable {
         }
 
         /**
+         * @return the raw bytes of the value, in the byte order of the
+         *         connection for formats other than 8
+         */
+        public byte[] data() {
+
+            return value;
+        }
+
+        /**
+         * @return the number of items of the format's size in the value
+         */
+        public int length() {
+
+            return length;
+        }
+
+        /**
+         * @return how many bytes of the property were not returned
+         */
+        public int bytesAfter() {
+
+            return bytesAfter;
+        }
+
+        /**
          * Returns the value at index <code>i</code>. This interprets the
          * underlying byte data according to the format of this property.
          * 
@@ -432,7 +457,7 @@ public class Window extends Drawable implements GLXDrawable {
             case 32:
                 v = ((0xff & value[i * 4]) << 24)
                         | ((0xff & value[i * 4 + 1]) << 16)
-                        | ((0xff & value[i * 4 + 2] << 8))
+                        | ((0xff & value[i * 4 + 2]) << 8)
                         | (0xff & (value[i * 4 + 3]));
                 break;
             default:
@@ -604,6 +629,21 @@ public class Window extends Drawable implements GLXDrawable {
         private int x;
 
         private int y;
+
+        public Window child() {
+
+            return child;
+        }
+
+        public int x() {
+
+            return x;
+        }
+
+        public int y() {
+
+            return y;
+        }
 
         Coordinates(ResponseInputStream i) {
 

@@ -26,5 +26,7 @@ public final class UnmapNotify extends Event {
     return fromConfigure;
   }
 
-
+  public int getWindowID() {
+    return windowID;
+  }
 }

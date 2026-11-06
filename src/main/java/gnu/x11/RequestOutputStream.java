@@ -284,7 +284,9 @@ public class RequestOutputStream extends FilterOutputStream {
         flush ();
       }
 
-      assert this.timerTask == null;
+      if (this.timerTask != null) {
+        this.timerTask.cancel();
+      }
       this.timerTask = new RequestTimerTask();
       this.flushTimer.schedule(timerTask, FLUSH_TIMER_DELAY);
       

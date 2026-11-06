@@ -20,9 +20,6 @@ import gnu.x11.extension.ErrorFactory;
 import gnu.x11.extension.EventFactory;
 import gnu.x11.extension.NotFoundException;
 import gnu.x11.extension.XCMisc;
-import jnr.unixsocket.UnixSocket;
-import jnr.unixsocket.UnixSocketAddress;
-import jnr.unixsocket.UnixSocketChannel;
 
 /** X server connection. */
 // TODO Support Multiple Screens
@@ -231,7 +228,7 @@ public class Display {
     public Display(Socket socket, String hostname, int displayNumber, int screenNumber)
             throws EscherServerConnectionException {
 
-        setDefaultScreenNumber(screenNumber);
+        setDefaultScreenNumber(screenNumber != -1 ? screenNumber : 0);
         setHostname(hostname);
         setDisplayNumber(displayNumber);
         setSocket(socket);
@@ -252,18 +249,15 @@ public class Display {
         setHostname(hostname);
         setDisplayNumber(displayNumber);
         try {
-System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." + screenNumber);
             if (hostname.startsWith("/")) {
-                String displayNmae = hostname + ":" + displayNumber + (screenNumber != -1 ? "." + screenNumber : "");
-                UnixSocketAddress address = new UnixSocketAddress(displayNmae);
-                UnixSocketChannel channel = UnixSocketChannel.open(address);
-                socket = new UnixSocket(channel);
+                // launchd style, the socket is named after the whole display
+                socket = new UnixDomainSocket(hostname + ":" + displayNumber);
             } else {
                 socket = new Socket(hostname, 6000 + displayNumber);
             }
             setSocket(socket);
         } catch (IOException ex) {
-            handleException(ex);
+            throw new EscherServerConnectionException(ex);
         }
         init_streams();
         init();
@@ -1371,10 +1365,20 @@ System.err.println("Deisplay::<init>: " + hostname + ":" + displayNumber + "." +
     public boolean eventAvailable() {
 
         try {
-            return inputStream.available() > 0;
+            return inputStream.eventPending();
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+     * Fetches the next event without waiting for one.
+     *
+     * @return the next event, null if there is none right now
+     */
+    public Event pollEvent() {
+
+        return inputStream.pollEvent();
     }
 
     public Event nextEvent() {
