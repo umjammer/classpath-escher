@@ -18,4 +18,8 @@ public final class SelectionClear extends Event {
     selectionAtomID = in.readInt32();
     in.skip(16);
   }
+
+  public int getSelectionAtomID() {
+    return selectionAtomID;
+  }
 }

@@ -24,4 +24,24 @@ public final class SelectionRequest extends Event {
     propertyAtomID = in.readInt32();
     in.skip(4);
   }
+
+  public int getTime() {
+    return time;
+  }
+
+  public int getRequestorWindowID() {
+    return requestorWindowID;
+  }
+
+  public int getSelectionAtomID() {
+    return selectionAtomID;
+  }
+
+  public int getTargetAtomID() {
+    return targetAtomID;
+  }
+
+  public int getPropertyAtomID() {
+    return propertyAtomID;
+  }
 }

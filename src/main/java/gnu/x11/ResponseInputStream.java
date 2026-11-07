@@ -50,6 +50,9 @@ import java.util.List;
  */
 public class ResponseInputStream extends FilterInputStream {
 
+    private static final java.util.logging.Logger logger =
+            java.util.logging.Logger.getLogger(ResponseInputStream.class.getName());
+
     /**
      * The display to which this input stream is associated.
      */
@@ -345,6 +348,27 @@ public class ResponseInputStream extends FilterInputStream {
     }
 
     /**
+     * @return whether anything is there for {@link #pollEvent()} to look at
+     */
+    public synchronized boolean eventPending() throws IOException {
+
+        return !this.events.isEmpty() || this.in.available() > 0;
+    }
+
+    /**
+     * Fetches the next event without waiting for one.
+     *
+     * @return the next event, <code>null</code> if there is none right now
+     */
+    public synchronized Event pollEvent() {
+
+        if (!this.events.isEmpty()) {
+            return (Event) this.events.removeFirst();
+        }
+        return this.readEventFromStream();
+    }
+
+    /**
      * Reads an event from the input stream of the connection. If there is a
      * reply waiting to be fetched, this returns <code>null</code>.
      * 
@@ -515,7 +539,18 @@ public class ResponseInputStream extends FilterInputStream {
                 this.handleException(ex);
             }
             if (code == 0) {
-                this.readError();
+                try {
+                    this.readError();
+                } catch (gnu.x11.Error e) {
+                    // An error for this request means there is no reply to
+                    // wait for. One for an earlier, asynchronous request has
+                    // nothing to do with the caller, and throwing it here
+                    // would leave the reply in the stream, to be misread later.
+                    if (e.seqNumber == exp_seq_no) {
+                        throw e;
+                    }
+                    logger.warning("asynchronous X error: " + e);
+                }
             } else if (code > 1) { // Event.
                 Event ev = this.readEventFromStream();
                 if (ev != null) {

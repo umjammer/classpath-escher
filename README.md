@@ -1,6 +1,29 @@
-[![Release](https://jitpack.io/v/umjammer/classpath-escher.svg)](https://jitpack.io/#umjammer/classpath-escher) [![Parent](https://img.shields.io/badge/Parent-caciocavallo-pink)](https://github.com/umjammer/caciocavallo)
+[![Release](https://jitpack.io/v/umjammer/classpath-escher.svg)](https://jitpack.io/#umjammer/classpath-escher)
+[![Java CI](https://github.com/umjammer/classpath-escher/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/classpath-escher/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/umjammer/classpath-escher/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/classpath-escher/actions/workflows/codeql.yml)
+![Java](https://img.shields.io/badge/Java-17-b07219)
+[![Parent](https://img.shields.io/badge/Parent-caciocavallo-pink)](https://github.com/umjammer/caciocavallo)
 
-# Classpath Escher
+# classpath-escher
+
+X11 library for caciocavallo
+
+## Install
+
+https://jitpack.io/#umjammer/classpath-escher
+
+## Usage
+
+## References
+
+ * https://sourceforge.net/projects/escher/
+ * https://github.com/moaxcp/escher
+ * https://github.com/xadorfr/J11
+
+## TODO
+
+---
+# Original
 
 > Godel, Escher, Bach: an Eternal Golden Braid
 
@@ -8,7 +31,6 @@ Escher is a collection of libraries for X Window System written purely
 in Java. It consists of an X11 protocol implementation (similar to
 xlib for C/C++), and its extensions such as GLX, the OpenGL rendering
 protocol.
-
 
 ## How To Run
 

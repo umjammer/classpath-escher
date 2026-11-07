@@ -141,6 +141,7 @@ public abstract class Drawable extends Resource {
         GeometryInfo info;
         RequestOutputStream o = display.getResponseOutputStream();
         synchronized (o) {
+            o.beginRequest(14, 0, 2);
             o.writeInt32(id);
             ResponseInputStream i = display.getResponseInputStream();
             synchronized (i) {
